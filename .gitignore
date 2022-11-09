@@ -1,4 +1,5 @@
 data/images
+.buckconfig
 # OSX
 #
 .DS_Store
