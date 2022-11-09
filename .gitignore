@@ -1,5 +1,16 @@
 data/images
 .buckconfig
+.eslintrc.js
+.flowconfig
+.node-version
+.prettierrc.js
+.ruby-version
+.ruby-version
+.watchmanconfig
+babel.config.js
+metro.config.js
+Gemfile
+package-lock.json
 # OSX
 #
 .DS_Store
