@@ -5,7 +5,7 @@ const Logo = () => {
   return (
     <View style = {{alignItems :'center'}}>
         <Image
-        style = {{width:50, height:50 , alignItems: 'flex-start', borderRadius:20 }}
+        style = {{width:50, height:50 , alignItems: 'flex-start' }}
         source = {require('../../data/images/logo.png')}/>
     </View>
   )

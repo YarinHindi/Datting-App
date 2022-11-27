@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     },
     card:{
       width : '95%',
-      height : '85%',
+      height : '78%',
       borderRadius : 10,
   
       shadowColor : '#000',
