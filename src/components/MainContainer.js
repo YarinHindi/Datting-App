@@ -7,16 +7,26 @@ import HomeScreen from '../screens/HomeScreen';
 import NewMatchesScreen from '../screens/NewMatchesScreen';
 import ChatScreen from '../screens/ChatScreen';
 import ProfileScreen from '../screens/ProfileScreen';
-import { color } from 'react-native-reanimated';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 
 //Screen names
 const homeName = "Home";
 const chatName = "Chat";
 const newMatchesName = "NewMatches";
-const profileName = 'Profile';
-
+const profileName = "Profile";
 const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator(); 
+const HomeNavigator = ()=>{
+  return(
+    <Stack.Navigator>
+      <Stack.Screen name="Home1" options= {{headerShown :false }} component ={HomeScreen}/>
+      <Stack.Screen name="Chat1" options= {{headerShown :false }} component ={ChatScreen}/>
+      <Stack.Screen name="Profile1" coptions= {{headerShown :false }} component={ProfileScreen}/>
+      <Stack.Screen name="NewMatches1" options= {{headerShown :false }} component={NewMatchesScreen}/>
+    </Stack.Navigator>
+  );
+};
 
 function MainContainer() {
   return (
@@ -57,11 +67,11 @@ function MainContainer() {
 
 
       >
-      <Tab.Screen name={homeName} options= {{headerShown :false }}  component={HomeScreen} />
+      <Tab.Screen name={homeName} options= {{headerShown :false, }}  component={HomeNavigator} />
       <Tab.Screen name={chatName} options= {{headerShown :false}} component={ChatScreen} />
-      <Tab.Screen name={newMatchesName} options= {{headerShown :false}} component={NewMatchesScreen} />
+      {/* <Tab.Screen name={newMatchesName} options= {{headerShown :false,}}  component={NewMatchesScreen} /> */}
       <Tab.Screen name={profileName} options= {{headerShown :false}} component={ProfileScreen} />
-
+      
     </Tab.Navigator>
   </NavigationContainer>
    
