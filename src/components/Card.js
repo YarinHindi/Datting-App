@@ -2,16 +2,33 @@ import { View, Text,StyleSheet,ImageBackground } from 'react-native'
 import React from 'react'
 
 const Card = (props) => {
-    const{name,image,bio} = props.user;
-  return (
-    <View style = {styles.pageContainer}>
-      <View style = {styles.card}>
-        <ImageBackground
+  const{id,name,image,bio} = props.user;
+  
+ function showCard(){
+    if(id!=-1){
+      return (        <ImageBackground
         source= {{uri: image}}
           style = {styles.image}>
             <Text style = {styles.name}> {name}</Text>
             <Text style = {styles.bio}> {bio}. </Text>
+        </ImageBackground>);
+    }else{
+      return ( 
+      <View style={{alignContent:'center',alignContent:'center',justifyContent:'center'}}>
+      <ImageBackground 
+        source= {{uri: 'https://cdn-icons-png.flaticon.com/128/1791/1791330.png'}}
+          style = {{  width: 200,height:200,justifyContent:'flex-end',marginLeft:50,marginTop:70}}>
+            <Text style = {{ fontSize :18,color: 'black',fontWeight : 'bold',}}> there is no more swipes for you get premium</Text>
         </ImageBackground>
+        </View>);
+    };
+   
+};
+
+    return (
+    <View style = {styles.pageContainer}>
+      <View style = {styles.card}>
+      {showCard()}
       </View>
     </View>
   )
@@ -34,6 +51,7 @@ const styles = StyleSheet.create({
       shadowOpacity: 0.36,
       shadowRadius: 6.68,
       elevation: 11,
+
     },
     image:{
       width: '100%',

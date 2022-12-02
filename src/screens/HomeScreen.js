@@ -1,34 +1,51 @@
-import { View, Text,Image,StyleSheet, ImageBackground,TouchableOpacity } from 'react-native'
-import React, { useState } from 'react'
-import Logo from '../components/Logo'
-import Card from '../components/Card'
-import Users from '../../data/Users'
-import { useNavigation } from '@react-navigation/native'
-import NewMatchesScreen from './NewMatchesScreen'
+import { View, Text,Image,StyleSheet, ImageBackground,TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import Logo from '../components/Logo';
+import Card from '../components/Card';
+import Users from '../../data/Users';
+import { useNavigation } from '@react-navigation/native';
+import NewMatchesScreen from './NewMatchesScreen';
+import {app,db,getFirestore, collection, addDoc} from "../../firebase/index";
+import { async } from '@firebase/util';
+import firestore from '@react-native-firebase/firestore';
+
+
 
 const HomeScreen = ({navigation}) => {
-const unLikePhoto = 'https://media.istockphoto.com/id/158002966/photo/painted-x-mark.jpg?s=612x612&w=0&k=20&c=hvGlwd3ep45Y0ALc45flcM_wxDR3WIjcyYuTwsOvt9U=';
-const LlikePhoto = 'https://-tbn0.gstatic.com/images?q=tbn:ANd9GcSl9lFE3qs-WV8PMOrcjj_Zz-cRKfuv9NyR3nCTNo4ZLw&s';
-//used to get users from
+
   const [currentCard,setCurrentCard] = useState(0)
+const addMatches = async () =>{
+  console.warn('herererere');
+  try {
+    await firestore().collection('users').add({id : '31321321', name: 'ddd'})
+  } catch (e) {
+    console.error("Error adding document: ", e);
+  }
+}
+
+
+//used to get users from
  
   const SwipeRight = ()=>{
+    if (Users[currentCard].id!=-1){
+      addMatches();
     navigation.navigate('NewMatches1');
-    console.warn("right")
+    }
+    console.warn(Users[currentCard].id);
     nextCard();
   };
   const SwipeLeft = ()=>{
-    console.warn("left")
+    console.warn(Users[currentCard].id);
     nextCard();
   };
 
 
   const nextCard = ()=>{
-    if (currentCard<4){
-    setCurrentCard(currentCard+1);
+    if (Users[currentCard].id==-1){
+    // setCurrentCard(currentCard);
+    console.warn('Stack card is epmty!!')
     }else{
-      setCurrentCard(0)
-      console.warn('Stack card is epmty!!')
+      setCurrentCard(currentCard+1);
     }
   }
   return (

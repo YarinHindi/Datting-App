@@ -34,4 +34,24 @@ export default [
         'https://media.istockphoto.com/id/1213860275/photo/senior-beautiful-grey-haired-woman-wearing-casual-shirt-and-glasses-over-red-background.jpg?s=612x612&w=0&k=20&c=FFfjT2Bt2jEd1hw8ooBWIxIwuN1pNPQdqG6FSqf8i-E=',
       bio: 'Hola',
     },
+
+      {
+      id: '5',
+      name: 'יונה בוחבוט',
+      image:
+        'https://media.istockphoto.com/id/1213860275/photo/senior-beautiful-grey-haired-woman-wearing-casual-shirt-and-glasses-over-red-background.jpg?s=612x612&w=0&k=20&c=FFfjT2Bt2jEd1hw8ooBWIxIwuN1pNPQdqG6FSqf8i-E=',
+      bio: 'Hola',
+    },
+
+    {
+      id: '-1',
+      name: '',
+      image:
+        'https://www.shutterstock.com/image-vector/emoji-crying-face-tears-emoticon-1938603115',
+      bio: '',
+    },
+    
+
+
+    
   ];

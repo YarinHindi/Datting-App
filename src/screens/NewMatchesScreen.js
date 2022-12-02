@@ -33,7 +33,7 @@ const NewMatchesScreen = ({navigation}) => {
           source ={{uri:'https://images.pexels.com/photos/6625880/pexels-photo-6625880.jpeg?auto=compress&cs=tinysrgb&w=1600'}}/>
       </View>
       <TouchableOpacity  onPress={()=>{
-        // navigation.goBack();
+        navigation.goBack();
         navigation.navigate("Chat");
       }}
        style = {{backgroundColor:'white', margin:5,paddingHorizontal:10,paddingVertical:8
@@ -42,6 +42,7 @@ const NewMatchesScreen = ({navigation}) => {
 
       </TouchableOpacity>
     </View>
+    
   )
 }
 
