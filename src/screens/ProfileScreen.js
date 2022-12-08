@@ -56,10 +56,6 @@ const ProfileScreen = () => {
     });
   };
 
-  const logOutF = () => {
-    console.warn(currentUser.photoURL);
-  };
-
   return (
     <SafeAreaView style={theStyle.root}>
       <View style={theStyle.container}>
