@@ -10,16 +10,37 @@ import {
 import React, { useState } from "react";
 import { Picker } from "@react-native-picker/picker";
 import ImagePicker from "react-native-image-crop-picker";
-import auth from "@react-native-firebase/auth";
+import { firebase } from "@react-native-firebase/auth";
+import firestore from "@react-native-firebase/firestore";
 
 const ProfileScreen = () => {
+  const { currentUser } = firebase.auth();
   const [name, setName] = useState("");
   const [bio, setBio] = useState("");
   const [gender, setGender] = useState("");
   const [lookingFor, setLookingFor] = useState("");
-  const [image, setImage] = useState("");
+  const [image, setImage] = useState(currentUser.photoURL);
 
-  const save = () => {};
+  const save = async () => {
+    try {
+      await firestore()
+        .collection("users")
+        .add({
+          id: `${currentUser.uid}`,
+          name: `${name ? name : console.warn("no name")}`,
+          photoURL: `${image ? image : console.warn("no image")}`,
+          bio: `${bio ? bio : console.warn("no bio")}`,
+          lookingFor: `${
+            lookingFor ? lookingFor : console.warn("no looking for")
+          }`,
+          gender: `${gender ? gender : console.warn("no gender")}`,
+          isPremium: false,
+        });
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
+    alert("We got your data successfully :)");
+  };
 
   const uploadImage = () => {
     ImagePicker.openPicker({
@@ -27,15 +48,16 @@ const ProfileScreen = () => {
       height: 300,
       cropping: true,
     }).then((image) => {
-      console.log(image);
+      path = image.path;
       setImage(image.path);
+      currentUser.updateProfile({
+        photoURL: image.path,
+      });
     });
   };
 
   const logOutF = () => {
-    auth()
-      .signOut()
-      .then(() => console.log("User signed out!"));
+    console.warn(currentUser.photoURL);
   };
 
   return (
@@ -47,18 +69,15 @@ const ProfileScreen = () => {
             uri: image,
           }}
         ></Image>
-
         <Pressable onPress={uploadImage} style={theStyle.button}>
           <Text>Upload Image</Text>
         </Pressable>
-
         <TextInput
           style={theStyle.input}
           placeholder="Name..."
           value={name}
           onChangeText={setName}
         />
-
         <TextInput
           style={theStyle.input}
           placeholder="bio..."
@@ -67,7 +86,6 @@ const ProfileScreen = () => {
           value={bio}
           onChangeText={setBio}
         />
-
         <Text>Gender</Text>
         <Picker
           label="Gender"
@@ -77,7 +95,6 @@ const ProfileScreen = () => {
           <Picker.Item label="Male" value="MALE" />
           <Picker.Item label="Female" value="FEMALE" />
         </Picker>
-
         <Text>Looking for</Text>
         <Picker
           label="Looking for"
@@ -87,13 +104,8 @@ const ProfileScreen = () => {
           <Picker.Item label="Male" value="MALE" />
           <Picker.Item label="Female" value="FEMALE" />
         </Picker>
-
         <Pressable onPress={save} style={theStyle.button}>
           <Text>Save</Text>
-        </Pressable>
-
-        <Pressable onPress={logOutF} style={theStyle.button}>
-          <Text>Log out</Text>
         </Pressable>
       </View>
     </SafeAreaView>
