@@ -12,6 +12,7 @@ import { Picker } from "@react-native-picker/picker";
 import ImagePicker from "react-native-image-crop-picker";
 import { firebase } from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
+import storage from "@react-native-firebase/storage";
 
 const ProfileScreen = () => {
   const { currentUser } = firebase.auth();
@@ -21,20 +22,37 @@ const ProfileScreen = () => {
   const [lookingFor, setLookingFor] = useState("");
   const [image, setImage] = useState(currentUser.photoURL);
 
+  const uploadImageToStorage = (path, imageName) => {
+    let reference = storage().ref(imageName);
+    let task = reference.putFile(path);
+
+    task
+      .then(() => {
+        // 4
+        console.log("Image uploaded to the bucket!");
+      })
+      .catch((e) => console.log("uploading image error => ", e));
+  };
+
   const save = async () => {
+    uploadImageToStorage(image, `${currentUser.uid}`);
+
+    const ref = firebase.storage().ref(`${currentUser.uid}`);
+    const url = await ref.getDownloadURL();
+
     try {
       await firestore()
         .collection("users")
         .add({
           id: `${currentUser.uid}`,
           name: `${name ? name : console.warn("no name")}`,
-          photoURL: `${image ? image : console.warn("no image")}`,
           bio: `${bio ? bio : console.warn("no bio")}`,
           lookingFor: `${
             lookingFor ? lookingFor : console.warn("no looking for")
           }`,
           gender: `${gender ? gender : console.warn("no gender")}`,
           isPremium: false,
+          photoURL: `${url}`,
         });
     } catch (e) {
       console.error("Error adding document: ", e);
