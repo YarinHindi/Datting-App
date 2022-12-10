@@ -6,11 +6,11 @@ import Logo from '../components/Logo';
 const SignUpScreen = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [pass, setPass] = useState('');
-  
+  const [user, setUser] = useState();
   function Login() {
     // Set an initializing state whilst Firebase connects
     const [initializing, setInitializing] = useState(true);
-    const [user, setUser] = useState();
+  
   
     // Handle user state changes
     function onAuthStateChanged(user) {
@@ -26,7 +26,9 @@ const SignUpScreen = ({navigation}) => {
     if (initializing) return null;
   
     if (user) {
-      navigation.navigate("Home1");
+      navigation.navigate("Home1",{
+        id:user.uid,
+      });
     }
   }
   

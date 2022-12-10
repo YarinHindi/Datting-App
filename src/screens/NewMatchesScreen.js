@@ -2,6 +2,7 @@ import { View, Text, TouchableOpacity,Image, Dimensions } from 'react-native'
 import React from 'react'
 import Logo from '../components/Logo'
 import { useNavigation, useRoute } from '@react-navigation/native'
+import Header from '../components/Header'
 
 const NewMatchesScreen = ({navigation}) => {
   // const {params} = useRoute();
@@ -12,6 +13,7 @@ const NewMatchesScreen = ({navigation}) => {
 
   return (
     <View style = {{height :"100%", backgroundColor: 'red',paddingTop :20, opacity:0.70}}>
+      <Header title='NewMatch' />
       <View style = {{alignItems:'center',justifyContent:'center',paddingHorizontal:10,paddingTop:50}}>
       <Image 
             style = {{height : 60, width: Dimensions.get('window').width/1.3,marginBottom:30}}

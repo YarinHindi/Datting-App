@@ -2,12 +2,13 @@ import { View, Text,StyleSheet,ImageBackground } from 'react-native'
 import React from 'react'
 
 const Card = (props) => {
-  const{id,name,image,bio} = props.user;
-  
+  const{id,name,bio,photoURL} = props.user;
+  const userId = props.userId;
+
  function showCard(){
     if(id!=-1){
       return (        <ImageBackground
-        source= {{uri: image}}
+        source= {{uri: photoURL}}
           style = {styles.image}>
             <Text style = {styles.name}> {name}</Text>
             <Text style = {styles.bio}> {bio}. </Text>
