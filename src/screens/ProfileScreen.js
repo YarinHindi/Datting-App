@@ -17,62 +17,28 @@ import storage from "@react-native-firebase/storage";
 const ProfileScreen = () => {
   const { currentUser } = firebase.auth();
   const [name, setName] = useState("");
-  const [bio, setBio] = useState("");
   const [gender, setGender] = useState("");
+  const [bio, setBio] = useState("");
   const [lookingFor, setLookingFor] = useState("");
   const [image, setImage] = useState(currentUser.photoURL);
 
-  const uploadImageToStorage = (path, imageName) => {
-    let reference = storage().ref(imageName);
-    let task = reference.putFile(path);
-
-    task
-      .then(() => {
-        // 4
-        console.log("Image uploaded to the bucket!");
-      })
-      .catch((e) => console.log("uploading image error => ", e));
-  };
-
-  const save = async () => {
-    uploadImageToStorage(image, `${currentUser.uid}`);
-
-    const ref = firebase.storage().ref(`${currentUser.uid}`);
-    const url = await ref.getDownloadURL();
-
-    try {
-      await firestore()
-        .collection("users")
-        .add({
-          id: `${currentUser.uid}`,
-          name: `${name ? name : console.warn("no name")}`,
-          bio: `${bio ? bio : console.warn("no bio")}`,
-          lookingFor: `${
-            lookingFor ? lookingFor : console.warn("no looking for")
-          }`,
-          gender: `${gender ? gender : console.warn("no gender")}`,
-          isPremium: false,
-          photoURL: `${url}`,
+  const setDatas = (currentUser) => {
+    firestore()
+      .collection("users")
+      // Filter results
+      .where("id", "==", currentUser.uid)
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((documentSnapshot) => {
+          setBio(documentSnapshot.data().bio);
+          setLookingFor(documentSnapshot.data().lookingFor);
+          setGender(documentSnapshot.data().gender);
+          setName(documentSnapshot.data().name);
         });
-    } catch (e) {
-      console.error("Error adding document: ", e);
-    }
-    alert("We got your data successfully :)");
+      });
   };
 
-  const uploadImage = () => {
-    ImagePicker.openPicker({
-      width: 300,
-      height: 300,
-      cropping: true,
-    }).then((image) => {
-      path = image.path;
-      setImage(image.path);
-      currentUser.updateProfile({
-        photoURL: image.path,
-      });
-    });
-  };
+  setDatas(currentUser);
 
   return (
     <SafeAreaView style={theStyle.root}>
@@ -83,44 +49,14 @@ const ProfileScreen = () => {
             uri: image,
           }}
         ></Image>
-        <Pressable onPress={uploadImage} style={theStyle.button}>
-          <Text>Upload Image</Text>
-        </Pressable>
-        <TextInput
-          style={theStyle.input}
-          placeholder="Name..."
-          value={name}
-          onChangeText={setName}
-        />
-        <TextInput
-          style={theStyle.input}
-          placeholder="bio..."
-          multiline
-          numberOfLines={3}
-          value={bio}
-          onChangeText={setBio}
-        />
-        <Text>Gender</Text>
-        <Picker
-          label="Gender"
-          selectedValue={gender}
-          onValueChange={(itemValue) => setGender(itemValue)}
-        >
-          <Picker.Item label="Male" value="MALE" />
-          <Picker.Item label="Female" value="FEMALE" />
-        </Picker>
-        <Text>Looking for</Text>
-        <Picker
-          label="Looking for"
-          selectedValue={lookingFor}
-          onValueChange={(itemValue) => setLookingFor(itemValue)}
-        >
-          <Picker.Item label="Male" value="MALE" />
-          <Picker.Item label="Female" value="FEMALE" />
-        </Picker>
-        <Pressable onPress={save} style={theStyle.button}>
-          <Text>Save</Text>
-        </Pressable>
+        <Text style={theStyle.text1}>Name:</Text>
+        <Text style={theStyle.text2}>{name}</Text>
+        <Text style={theStyle.text1}>Bio:</Text>
+        <Text style={theStyle.text2}>{bio}</Text>
+        <Text style={theStyle.text1}>Gender:</Text>
+        <Text style={theStyle.text2}>{gender}</Text>
+        <Text style={theStyle.text1}>Looking for:</Text>
+        <Text style={theStyle.text2}>{lookingFor}</Text>
       </View>
     </SafeAreaView>
   );
@@ -135,10 +71,18 @@ const theStyle = StyleSheet.create({
   container: {
     padding: 10,
   },
-  input: {
+  text1: {
+    fontSize: 20,
+    textAlign: "center",
+  },
+  text2: {
     margin: 10,
-    borderBottomColor: "lightgray",
-    borderBottomWidth: 1,
+    textAlign: "center",
+    color: "black",
+    fontWeight: "bold",
+    fontSize: 30,
+    backgroundColor: "#ADD8E6",
+    borderRadius: 20,
   },
   button: {
     backgroundColor: "#ADD8E6",
@@ -149,9 +93,11 @@ const theStyle = StyleSheet.create({
     margin: 10,
   },
   images: {
-    height: 100,
-    width: 100,
+    height: 170,
+    width: 170,
     borderRadius: 15,
+    alignSelf: "center",
+    marginBottom: 7,
   },
 });
 
