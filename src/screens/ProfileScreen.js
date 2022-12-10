@@ -1,18 +1,7 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  SafeAreaView,
-  Pressable,
-  TextInput,
-  Image,
-} from "react-native";
+import { View, Text, StyleSheet, SafeAreaView, Image } from "react-native";
 import React, { useState } from "react";
-import { Picker } from "@react-native-picker/picker";
-import ImagePicker from "react-native-image-crop-picker";
 import { firebase } from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
-import storage from "@react-native-firebase/storage";
 
 const ProfileScreen = () => {
   const { currentUser } = firebase.auth();
@@ -20,7 +9,7 @@ const ProfileScreen = () => {
   const [gender, setGender] = useState("");
   const [bio, setBio] = useState("");
   const [lookingFor, setLookingFor] = useState("");
-  const [image, setImage] = useState(currentUser.photoURL);
+  const [image] = useState(currentUser.photoURL);
 
   const setDatas = (currentUser) => {
     firestore()
