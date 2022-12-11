@@ -5,20 +5,31 @@ import {
   SafeAreaView,
   Image,
   Pressable,
+  Button,
 } from "react-native";
 import React, { useState } from "react";
-import { firebase } from "@react-native-firebase/auth";
+import auth, { firebase } from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
 
-const logout = () => {};
-
-const ProfileScreen = () => {
+const ProfileScreen = ({ navigation }) => {
   const { currentUser } = firebase.auth();
   const [name, setName] = useState("");
   const [gender, setGender] = useState("");
   const [bio, setBio] = useState("");
   const [lookingFor, setLookingFor] = useState("");
-  const [image] = useState(currentUser.photoURL);
+  const [image, setImage] = useState(currentUser.photoURL);
+
+  const edit = () => {
+    navigation.navigate("Data2");
+  };
+
+  const logout = () => {
+    auth()
+      .signOut()
+      .then(() => console.log("User signed out!"));
+
+    navigation.navigate("SignIn1");
+  };
 
   const setDatas = (currentUser) => {
     firestore()
@@ -32,8 +43,13 @@ const ProfileScreen = () => {
           setLookingFor(documentSnapshot.data().lookingFor);
           setGender(documentSnapshot.data().gender);
           setName(documentSnapshot.data().name);
+          setImage(documentSnapshot.data().photoURL);
         });
       });
+  };
+
+  const reloadData = () => {
+    setDatas(currentUser);
   };
 
   setDatas(currentUser);
@@ -41,6 +57,9 @@ const ProfileScreen = () => {
   return (
     <SafeAreaView style={theStyle.root}>
       <ScrollView style={theStyle.container}>
+        <Pressable onPress={reloadData} style={theStyle.reload}>
+          <Text>Reload Data</Text>
+        </Pressable>
         <Image
           style={theStyle.images}
           source={{
@@ -55,6 +74,9 @@ const ProfileScreen = () => {
         <Text style={theStyle.text2}>{gender}</Text>
         <Text style={theStyle.text1}>Looking for:</Text>
         <Text style={theStyle.text2}>{lookingFor}</Text>
+        <Pressable onPress={edit} style={theStyle.button}>
+          <Text>Edit Profile</Text>
+        </Pressable>
         <Pressable onPress={logout} style={theStyle.button}>
           <Text>Log Out</Text>
         </Pressable>
@@ -91,6 +113,15 @@ const theStyle = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 20,
+    margin: 10,
+  },
+  reload: {
+    backgroundColor: "#FFCCCB",
+    height: 70,
+    width: 70,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 100,
     margin: 10,
   },
   images: {
