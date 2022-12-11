@@ -1,49 +1,104 @@
-import { View, Text, Button } from 'react-native'
-import React, {useState, useEffect} from 'react'
-import Logo from '../components/Logo'
-import auth from '@react-native-firebase/auth';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  SafeAreaView,
+  Pressable,
+  TextInput,
+  Image,
+} from "react-native";
+import React, { useState } from "react";
+import { Picker } from "@react-native-picker/picker";
+import ImagePicker from "react-native-image-crop-picker";
+import { firebase } from "@react-native-firebase/auth";
+import firestore from "@react-native-firebase/firestore";
+import storage from "@react-native-firebase/storage";
 
-const ProfileScreen = ({navigation}) => {
-  const userId = useRoute().params.id;
-  console.warn(userId);
-  function Login() {
-    // Set an initializing state whilst Firebase connects
-    const [initializing, setInitializing] = useState(true);
-    const [user, setUser] = useState();
-  
-    // Handle user state changes
-    function onAuthStateChanged(user) {
-      setUser(user);
-      if (initializing) setInitializing(false);
-    }
-  
-    useEffect(() => {
-      const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-      return subscriber; // unsubscribe on unmount
-    }, []);
-  
-    if (initializing) return null;
-  
-    if (!user) {
-      navigation.navigate("SignIn1");
-    }
-  }
+const ProfileScreen = () => {
+  const { currentUser } = firebase.auth();
+  const [name, setName] = useState("");
+  const [gender, setGender] = useState("");
+  const [bio, setBio] = useState("");
+  const [lookingFor, setLookingFor] = useState("");
+  const [image, setImage] = useState(currentUser.photoURL);
 
-  function logOff() {
-    auth()
-    .signOut()
-    .then(() => console.log('User signed out!'));
-  }
+  const setDatas = (currentUser) => {
+    firestore()
+      .collection("users")
+      // Filter results
+      .where("id", "==", currentUser.uid)
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((documentSnapshot) => {
+          setBio(documentSnapshot.data().bio);
+          setLookingFor(documentSnapshot.data().lookingFor);
+          setGender(documentSnapshot.data().gender);
+          setName(documentSnapshot.data().name);
+        });
+      });
+  };
+
+  setDatas(currentUser);
 
   return (
-    <View>
-      <Logo/>
-      <Login/>
-      <Text>ProfileScreen</Text>
-      <Button title='logoff' onPress={logOff}/>
-    </View>
-  )
-}
+    <SafeAreaView style={theStyle.root}>
+      <View style={theStyle.container}>
+        <Image
+          style={theStyle.images}
+          source={{
+            uri: image,
+          }}
+        ></Image>
+        <Text style={theStyle.text1}>Name:</Text>
+        <Text style={theStyle.text2}>{name}</Text>
+        <Text style={theStyle.text1}>Bio:</Text>
+        <Text style={theStyle.text2}>{bio}</Text>
+        <Text style={theStyle.text1}>Gender:</Text>
+        <Text style={theStyle.text2}>{gender}</Text>
+        <Text style={theStyle.text1}>Looking for:</Text>
+        <Text style={theStyle.text2}>{lookingFor}</Text>
+      </View>
+    </SafeAreaView>
+  );
+};
 
-export default ProfileScreen
+const theStyle = StyleSheet.create({
+  root: {
+    width: "100%",
+    flex: 1,
+    padding: 10,
+  },
+  container: {
+    padding: 10,
+  },
+  text1: {
+    fontSize: 20,
+    textAlign: "center",
+  },
+  text2: {
+    margin: 10,
+    textAlign: "center",
+    color: "black",
+    fontWeight: "bold",
+    fontSize: 30,
+    backgroundColor: "#ADD8E6",
+    borderRadius: 20,
+  },
+  button: {
+    backgroundColor: "#ADD8E6",
+    height: 25,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 20,
+    margin: 10,
+  },
+  images: {
+    height: 170,
+    width: 170,
+    borderRadius: 15,
+    alignSelf: "center",
+    marginBottom: 7,
+  },
+});
+
+export default ProfileScreen;

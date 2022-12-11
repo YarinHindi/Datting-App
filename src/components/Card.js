@@ -3,7 +3,6 @@ import React from 'react'
 
 const Card = (props) => {
   const{id,name,bio,photoURL} = props.user;
-  const userId = props.userId;
 
  function showCard(){
     if(id!=-1){

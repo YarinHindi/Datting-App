@@ -24,7 +24,8 @@ const  ChatRow = ({matchDetails}) => {
     
             )
           )
-        ),[]
+        ),[currentUser]
+        
       )
     return (
     <TouchableOpacity style = {[{flexDirection :'row',alignItems:'center',backgroundColor:'white',marginHorizontal:3,marginVertical:1,borderRadius:8},
@@ -44,7 +45,7 @@ const  ChatRow = ({matchDetails}) => {
 
         <View>
             <Text style = {{fontWeight:'bold',fontSize:18,lineHeight: 28}}>
-                {matchedUserInfo[0].name}
+            {matchedUserInfo[0].name}
             </Text>
             <Text>Say Hi!</Text>
         </View>

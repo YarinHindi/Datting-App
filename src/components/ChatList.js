@@ -2,13 +2,15 @@ import { View, Text, FlatList,Image } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import firestore from '@react-native-firebase/firestore';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { firebase } from "@react-native-firebase/auth";
 import Header from './Header';
 import ChatRow from './ChatRow';
-const ChatList = (props) => {
+const ChatList = () => {
     const [matches,setMatches] = useState([]);
     const navigation = useNavigation();
-    const userId = props.userId;
-    
+    const { currentUser } = firebase.auth();
+    const userId = currentUser.uid;
+    console.log(userId);
     useEffect(
         () =>
          firestore().collection("matches").where('userMatched','array-contains',userId).onSnapshot(

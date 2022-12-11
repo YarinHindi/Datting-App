@@ -26,9 +26,7 @@ const SignUpScreen = ({navigation}) => {
     if (initializing) return null;
   
     if (user) {
-      navigation.navigate("Home1",{
-        id:user.uid,
-      });
+      navigation.navigate("Home1");
     }
   }
   

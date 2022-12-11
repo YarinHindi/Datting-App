@@ -1,20 +1,19 @@
+
 import { View, Text,Image,StyleSheet, ImageBackground,TouchableOpacity } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import Logo from '../components/Logo';
 import Card from '../components/Card';
-import Users from '../../data/Users';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import NewMatchesScreen from './NewMatchesScreen';
-import {app,db,getFirestore, collection, addDoc} from "../../firebase/index";
 import { async } from '@firebase/util';
-import firestore, { firebase } from '@react-native-firebase/firestore';
-
-
+import firestore from '@react-native-firebase/firestore';
+import { firebase } from "@react-native-firebase/auth";
 
 const HomeScreen = ({navigation}) => {
   const [users,setUsers] = useState([]);
   const [btn,setBtn] = useState(false);
-  const userId = useRoute().params.id;
+  const { currentUser } = firebase.auth();
+  const userId = currentUser.uid;
   const [currentCard,setCurrentCard] = useState(0)
   useEffect(
     ()=>
@@ -83,13 +82,13 @@ const unLike = async ()=>{
     if(users.length>currentCard){
       const props = {
         user: usersfilter[currentCard],
-        userId:userId,
+        
       }
       return props
       }else{
         const props = {
           user: {id:'-1',name:'None',bio:'None',photoURL:'None'},
-          userId:userId,
+          
       }
       return props
     }
@@ -110,23 +109,23 @@ const unLike = async ()=>{
           </TouchableOpacity>
           </View>
             <Card {...props} />
-        </View>
-      </View>    
-  )
-}
+      </View>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
-  pageContainer:{
-    justifyContent : 'center',
-    alignItems : 'center',
+  pageContainer: {
+    justifyContent: "center",
+    alignItems: "center",
   },
-  card:{
-    width : '95%',
-    height : '85%',
-    borderRadius : 10,
+  card: {
+    width: "95%",
+    height: "85%",
+    borderRadius: 10,
 
-    shadowColor : '#000',
-    shadowOffset:{
+    shadowColor: "#000",
+    shadowOffset: {
       width: 0,
       height: 5,
     },
@@ -134,12 +133,11 @@ const styles = StyleSheet.create({
     shadowRadius: 6.68,
     elevation: 11,
   },
-  animatedCard:{
-    width : '100%',
-    height: '100%',
+  animatedCard: {
+    width: "100%",
+    height: "100%",
     // alignItems : 'center',
-  //  justifyContent: 'center',
+    //  justifyContent: 'center',
   },
-
-})
-export default HomeScreen
+});
+export default HomeScreen;
