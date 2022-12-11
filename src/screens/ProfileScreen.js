@@ -1,18 +1,16 @@
 import {
-  View,
+  ScrollView,
   Text,
   StyleSheet,
   SafeAreaView,
-  Pressable,
-  TextInput,
   Image,
+  Pressable,
 } from "react-native";
 import React, { useState } from "react";
-import { Picker } from "@react-native-picker/picker";
-import ImagePicker from "react-native-image-crop-picker";
 import { firebase } from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
-import storage from "@react-native-firebase/storage";
+
+const logout = () => {};
 
 const ProfileScreen = () => {
   const { currentUser } = firebase.auth();
@@ -20,7 +18,7 @@ const ProfileScreen = () => {
   const [gender, setGender] = useState("");
   const [bio, setBio] = useState("");
   const [lookingFor, setLookingFor] = useState("");
-  const [image, setImage] = useState(currentUser.photoURL);
+  const [image] = useState(currentUser.photoURL);
 
   const setDatas = (currentUser) => {
     firestore()
@@ -42,7 +40,7 @@ const ProfileScreen = () => {
 
   return (
     <SafeAreaView style={theStyle.root}>
-      <View style={theStyle.container}>
+      <ScrollView style={theStyle.container}>
         <Image
           style={theStyle.images}
           source={{
@@ -57,7 +55,10 @@ const ProfileScreen = () => {
         <Text style={theStyle.text2}>{gender}</Text>
         <Text style={theStyle.text1}>Looking for:</Text>
         <Text style={theStyle.text2}>{lookingFor}</Text>
-      </View>
+        <Pressable onPress={logout} style={theStyle.button}>
+          <Text>Log Out</Text>
+        </Pressable>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -85,7 +86,7 @@ const theStyle = StyleSheet.create({
     borderRadius: 20,
   },
   button: {
-    backgroundColor: "#ADD8E6",
+    backgroundColor: "#FFCCCB",
     height: 25,
     justifyContent: "center",
     alignItems: "center",

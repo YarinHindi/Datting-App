@@ -1,5 +1,5 @@
 import {
-  View,
+  ScrollView,
   Text,
   StyleSheet,
   SafeAreaView,
@@ -72,11 +72,12 @@ const SetUserData = () => {
         photoURL: image.path,
       });
     });
+    // auth().signOut();
   };
 
   return (
     <SafeAreaView style={theStyle.root}>
-      <View style={theStyle.container}>
+      <ScrollView style={theStyle.container}>
         <Image
           style={theStyle.images}
           source={{
@@ -121,7 +122,7 @@ const SetUserData = () => {
         <Pressable onPress={save} style={theStyle.button}>
           <Text>Save</Text>
         </Pressable>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
