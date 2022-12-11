@@ -3,7 +3,7 @@ import { View, Text, Button,StyleSheet, TouchableOpacity,Image, Dimensions } fro
 
 import * as React from 'react';
 import MainContainer from './src/components/MainContainer.js';
-import { flingGestureHandlerProps } from 'react-native-gesture-handler/lib/typescript/handlers/FlingGestureHandler.js';
+import PremiumCreationScreen from './src/screens/PremiumCreationScreen.js';
 
 function App() {
 

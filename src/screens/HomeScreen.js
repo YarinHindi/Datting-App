@@ -1,4 +1,4 @@
-import { View, Text,Image,StyleSheet, ImageBackground,TouchableOpacity } from 'react-native';
+import { View, Text,Image,StyleSheet, ImageBackground,TouchableOpacity, Button } from 'react-native';
 import React, { useState } from 'react';
 import Logo from '../components/Logo';
 import Card from '../components/Card';
@@ -48,10 +48,17 @@ const addMatches = async () =>{
       setCurrentCard(currentCard+1);
     }
   }
+
+  function goPremium() {
+    navigation.navigate("PremiumCreation1");
+  }
+
   return (
       <View style = {{flex :1}} >
         <View>
           <Logo/>
+          {/* if user is not premium */}
+          <Button title='Go premium' onPress={goPremium}/>
           <View style = {{flexDirection:'row',justifyContent:'space-evenly'}}>
           <TouchableOpacity  onPress={()=>SwipeLeft()} >
                 <Image  style = {{height:30,width:30,borderColor:'red'}}
@@ -77,7 +84,6 @@ const styles = StyleSheet.create({
     width : '95%',
     height : '85%',
     borderRadius : 10,
-
     shadowColor : '#000',
     shadowOffset:{
       width: 0,
@@ -95,4 +101,4 @@ const styles = StyleSheet.create({
   },
 
 })
-export default HomeScreen
+export default HomeScreen;
