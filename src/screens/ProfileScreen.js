@@ -1,4 +1,10 @@
-import { View, Text, StyleSheet, SafeAreaView, Image } from "react-native";
+import {
+  ScrollView,
+  Text,
+  StyleSheet,
+  SafeAreaView,
+  Image,
+} from "react-native";
 import React, { useState } from "react";
 import { firebase } from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
@@ -31,7 +37,7 @@ const ProfileScreen = () => {
 
   return (
     <SafeAreaView style={theStyle.root}>
-      <View style={theStyle.container}>
+      <ScrollView style={theStyle.container}>
         <Image
           style={theStyle.images}
           source={{
@@ -46,7 +52,7 @@ const ProfileScreen = () => {
         <Text style={theStyle.text2}>{gender}</Text>
         <Text style={theStyle.text1}>Looking for:</Text>
         <Text style={theStyle.text2}>{lookingFor}</Text>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
