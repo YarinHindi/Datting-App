@@ -4,10 +4,13 @@ import {
   StyleSheet,
   SafeAreaView,
   Image,
+  Pressable,
 } from "react-native";
 import React, { useState } from "react";
 import { firebase } from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
+
+const logout = () => {};
 
 const ProfileScreen = () => {
   const { currentUser } = firebase.auth();
@@ -52,6 +55,9 @@ const ProfileScreen = () => {
         <Text style={theStyle.text2}>{gender}</Text>
         <Text style={theStyle.text1}>Looking for:</Text>
         <Text style={theStyle.text2}>{lookingFor}</Text>
+        <Pressable onPress={logout} style={theStyle.button}>
+          <Text>Log Out</Text>
+        </Pressable>
       </ScrollView>
     </SafeAreaView>
   );
@@ -80,7 +86,7 @@ const theStyle = StyleSheet.create({
     borderRadius: 20,
   },
   button: {
-    backgroundColor: "#ADD8E6",
+    backgroundColor: "#FFCCCB",
     height: 25,
     justifyContent: "center",
     alignItems: "center",
