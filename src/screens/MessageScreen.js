@@ -5,13 +5,17 @@ import Header from '../components/Header'
 
 
 const MessageScreen = () => {
-    const matchDetails = useRoute().params.matchDetails;
+    const {name,photo} = useRoute().params.matchDetails;
     // const userId = useRoute().params.userId;
-
+    // console.log(name);
+    // console.log(photo)
+    let props = {
+        userInfo:{name:name,photo:photo,}
+    }
     return (
     <SafeAreaView>
         <Header
-            title = 'yarin'
+            {...props}
         />
         <Text>
             Message Screen
