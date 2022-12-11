@@ -1,4 +1,3 @@
-
 import { View, Text } from "react-native";
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -6,13 +5,11 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import HomeScreen from "../screens/HomeScreen";
 import ChatScreen from "../screens/ChatScreen";
 import ProfileScreen from "../screens/ProfileScreen";
-import SetUserData from "../screens/SetUserData";
 
 const HomeBarNavigation = () => {
   const homeName = "Home";
   const chatName = "Chat";
   const profileName = "Profile";
-  const userDataName = "Data";
   const Tab = createBottomTabNavigator();
 
   return (
@@ -30,8 +27,6 @@ const HomeBarNavigation = () => {
               ? "chatbubble-ellipses"
               : "chatbubble-ellipses-outline";
           } else if (rn == profileName) {
-            iconName = focused ? "person-circle" : "person-circle-outline";
-          } else if (rn == userDataName) {
             iconName = focused ? "person-circle" : "person-circle-outline";
           }
           // You can return any component that you like here!
@@ -60,14 +55,8 @@ const HomeBarNavigation = () => {
         options={{ headerShown: false }}
         component={ProfileScreen}
       />
-      <Tab.Screen
-        name={userDataName}
-        options={{ headerShown: false }}
-        component={SetUserData}
-      />
     </Tab.Navigator>
   );
 };
 
-export default HomeBarNavigation
-
+export default HomeBarNavigation;
