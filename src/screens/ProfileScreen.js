@@ -6,6 +6,7 @@ import {
   Pressable,
   TextInput,
   Image,
+  Button,
 } from "react-native";
 import React, { useState } from "react";
 import { Picker } from "@react-native-picker/picker";
@@ -38,6 +39,10 @@ const ProfileScreen = () => {
       });
   };
 
+  const logOff = ()=>{
+    firebase.auth().signOut();
+  }
+
   setDatas(currentUser);
 
   return (
@@ -57,6 +62,7 @@ const ProfileScreen = () => {
         <Text style={theStyle.text2}>{gender}</Text>
         <Text style={theStyle.text1}>Looking for:</Text>
         <Text style={theStyle.text2}>{lookingFor}</Text>
+      
       </View>
     </SafeAreaView>
   );
