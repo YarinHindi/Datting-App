@@ -31,37 +31,6 @@ const ProfileScreen = ({ navigation }) => {
     navigation.navigate("SignIn1");
   };
 
-  const setDatas = (currentUser) => {
-    // firestore()
-    //   .collection("users")
-    //   .where("id", "==", currentUser.uid)
-    //   .onSnapshot((Snapshot) =>
-    //     Snapshot.forEach((documentSnapshot) => {
-    //       setBio(documentSnapshot.data().bio);
-    //       setLookingFor(documentSnapshot.data().lookingFor);
-    //       setGender(documentSnapshot.data().gender);
-    //       setName(documentSnapshot.data().name);
-    //       setImage(documentSnapshot.data().photoURL);
-    //     })
-    //   );
-  };
-  // firestore()
-  //   .collection("users")
-  //   // Filter results
-  //   .where("id", "==", currentUser.uid)
-  //   .get()
-  //   .then((querySnapshot) => {
-  //     querySnapshot.forEach((documentSnapshot) => {
-  //       setBio(documentSnapshot.data().bio);
-  //       setLookingFor(documentSnapshot.data().lookingFor);
-  //       setGender(documentSnapshot.data().gender);
-  //       setName(documentSnapshot.data().name);
-  //       setImage(documentSnapshot.data().photoURL);
-  //     });
-  //   });
-
-  const reloadData = () => {};
-
   useEffect(() => {
     firestore()
       .collection("users")
@@ -80,9 +49,6 @@ const ProfileScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={theStyle.root}>
       <ScrollView style={theStyle.container}>
-        <Pressable onPress={reloadData} style={theStyle.reload}>
-          <Text>Reload Data</Text>
-        </Pressable>
         <Image
           style={theStyle.images}
           source={{
