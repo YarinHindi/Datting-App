@@ -13,10 +13,11 @@ const Header = (props) => {
                 <Ionicons name="chevron-back-outline" size={28} color="#FF5864" />
             </TouchableOpacity>
             <Text style={{fontSize:20,lineHeight:32,fontWeight:'bold',paddingLeft:20,color:'black'}}>{title}</Text>
-            <Image style={{  borderRadius: 100,height: 40,width: 40,marginLeft: 15}}
+
+        </View>
+        <Image style={{  borderRadius: 100,height: 40,width: 40,marginRight: 15}}
                   source={{uri:photoURL}}
               />
-        </View>
     </SafeAreaView>
   )
 }
