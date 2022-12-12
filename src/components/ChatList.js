@@ -10,7 +10,6 @@ const ChatList = () => {
     const navigation = useNavigation();
     const { currentUser } = firebase.auth();
     const userId = currentUser.uid;
-    console.log(userId);
     useEffect(
         () =>
          firestore().collection("matches").where('userMatched','array-contains',userId).onSnapshot(

@@ -39,7 +39,6 @@ const HomeScreen = ({navigation}) => {
         }
       }
     )
-    console.warn(flag);
 
     if(flag){
       firestore().collection('matches').add({userMatched:[userId,users[currentCard].id]});

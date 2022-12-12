@@ -48,16 +48,16 @@ const MessageScreen = () => {
         firestore().collection('users').where('id','==',currentUser.uid).onSnapshot(
           (snapshot)=>setCurrentUserDetials(
             snapshot.docs.map((doc)=>({
-              ...doc.data(),
+              ...doc.data(), 
             })
-    
+            
             )
           )
         ),[]
       )
  
       const makeUrlName = async () => {
-        const photoURL = await currentUserDetials[0].photoURL;
+        const photoURL = await currentUserDetials[0].photoURL; 
         const curName = await currentUserDetials[0].name;
         currentUserSetURL(photoURL);
         currentUserSetName(curName);
