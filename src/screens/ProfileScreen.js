@@ -1,27 +1,35 @@
 import {
-  View,
+  ScrollView,
   Text,
   StyleSheet,
   SafeAreaView,
-  Pressable,
-  TextInput,
   Image,
+  Pressable,
   Button,
 } from "react-native";
 import React, { useState } from "react";
-import { Picker } from "@react-native-picker/picker";
-import ImagePicker from "react-native-image-crop-picker";
-import { firebase } from "@react-native-firebase/auth";
+import auth, { firebase } from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
-import storage from "@react-native-firebase/storage";
 
-const ProfileScreen = () => {
+const ProfileScreen = ({ navigation }) => {
   const { currentUser } = firebase.auth();
   const [name, setName] = useState("");
   const [gender, setGender] = useState("");
   const [bio, setBio] = useState("");
   const [lookingFor, setLookingFor] = useState("");
   const [image, setImage] = useState(currentUser.photoURL);
+
+  const edit = () => {
+    navigation.navigate("Data2");
+  };
+
+  const logout = () => {
+    auth()
+      .signOut()
+      .then(() => console.log("User signed out!"));
+
+    navigation.navigate("SignIn1");
+  };
 
   const setDatas = (currentUser) => {
     firestore()
@@ -35,19 +43,24 @@ const ProfileScreen = () => {
           setLookingFor(documentSnapshot.data().lookingFor);
           setGender(documentSnapshot.data().gender);
           setName(documentSnapshot.data().name);
+          setImage(documentSnapshot.data().photoURL);
         });
       });
   };
 
-  const logOff = ()=>{
-    firebase.auth().signOut();
-  }
+  const reloadData = () => {
+    setDatas(currentUser);
+  };
+
 
   setDatas(currentUser);
 
   return (
     <SafeAreaView style={theStyle.root}>
-      <View style={theStyle.container}>
+      <ScrollView style={theStyle.container}>
+        <Pressable onPress={reloadData} style={theStyle.reload}>
+          <Text>Reload Data</Text>
+        </Pressable>
         <Image
           style={theStyle.images}
           source={{
@@ -62,8 +75,13 @@ const ProfileScreen = () => {
         <Text style={theStyle.text2}>{gender}</Text>
         <Text style={theStyle.text1}>Looking for:</Text>
         <Text style={theStyle.text2}>{lookingFor}</Text>
-      
-      </View>
+        <Pressable onPress={edit} style={theStyle.button}>
+          <Text>Edit Profile</Text>
+        </Pressable>
+        <Pressable onPress={logout} style={theStyle.button}>
+          <Text>Log Out</Text>
+        </Pressable>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -91,11 +109,20 @@ const theStyle = StyleSheet.create({
     borderRadius: 20,
   },
   button: {
-    backgroundColor: "#ADD8E6",
+    backgroundColor: "#FFCCCB",
     height: 25,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 20,
+    margin: 10,
+  },
+  reload: {
+    backgroundColor: "#FFCCCB",
+    height: 70,
+    width: 70,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 100,
     margin: 10,
   },
   images: {

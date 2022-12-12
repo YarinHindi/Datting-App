@@ -14,7 +14,7 @@ import { firebase } from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
 import storage from "@react-native-firebase/storage";
 
-const SetUserData = ({ navigation }) => {
+const UpdateUserData = () => {
   const { currentUser } = firebase.auth();
   const [name, setName] = useState("");
   const [bio, setBio] = useState("");
@@ -34,32 +34,69 @@ const SetUserData = ({ navigation }) => {
       .catch((e) => console.log("uploading image error => ", e));
   };
 
-  const save = async () => {
-    uploadImageToStorage(image, `${currentUser.uid}`);
+  const updateName = () => {
+    firestore()
+      .collection("users")
+      .doc(`${currentUser.uid}`)
+      .update({
+        id: `${currentUser.uid}`,
+        name: `${name ? name : console.warn("no name")}`,
+      });
+  };
 
+  const updateBio = () => {
+    firestore()
+      .collection("users")
+      .doc(`${currentUser.uid}`)
+      .update({
+        id: `${currentUser.uid}`,
+        bio: `${bio ? bio : console.warn("no bio")}`,
+      });
+  };
+
+  const updateLookingFor = () => {
+    firestore()
+      .collection("users")
+      .doc(`${currentUser.uid}`)
+      .update({
+        id: `${currentUser.uid}`,
+        lookingFor: `${
+          lookingFor ? lookingFor : console.warn("no looking for")
+        }`,
+      });
+  };
+
+  const updateGender = () => {
+    firestore()
+      .collection("users")
+      .doc(`${currentUser.uid}`)
+      .update({
+        id: `${currentUser.uid}`,
+        gender: `${gender ? gender : console.warn("no gender")}`,
+      });
+  };
+
+  const updatePhoto = async () => {
+    uploadImageToStorage(image, `${currentUser.uid}`);
     const ref = firebase.storage().ref(`${currentUser.uid}`);
     const url = await ref.getDownloadURL();
 
-    try {
-      await firestore()
-        .collection("users")
-        .doc(`${currentUser.uid}`)
-        .set({
-          id: `${currentUser.uid}`,
-          name: `${name ? name : console.warn("no name")}`,
-          bio: `${bio ? bio : console.warn("no bio")}`,
-          lookingFor: `${
-            lookingFor ? lookingFor : console.warn("no looking for")
-          }`,
-          gender: `${gender ? gender : console.warn("no gender")}`,
-          isPremium: false,
-          photoURL: `${url}`,
-        });
-    } catch (e) {
-      console.error("Error adding document: ", e);
-    }
+    firestore()
+      .collection("users")
+      .doc(`${currentUser.uid}`)
+      .update({
+        id: `${currentUser.uid}`,
+        photoURL: `${url}`,
+      });
+  };
+
+  const save = () => {
+    if (name) updateName();
+    if (bio) updateBio();
+    if (lookingFor) updateLookingFor();
+    if (gender) updateGender();
+    if (image) updatePhoto();
     alert("We got your data successfully :)");
-    navigation.navigate("Home1");
   };
 
   const uploadImage = () => {
@@ -158,4 +195,4 @@ const theStyle = StyleSheet.create({
   },
 });
 
-export default SetUserData;
+export default UpdateUserData;

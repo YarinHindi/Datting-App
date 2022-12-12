@@ -10,6 +10,7 @@ import SignUpScreen from "../screens/SignUpScreen";
 import SetUserData from "../screens/SetUserData";
 import HomeBarNavigation from "./HomeBarNavigation";
 import MessageScreen from "../screens/MessageScreen";
+import UpdateUserData from "../screens/UpdateUserData";
 
 const Stack = createNativeStackNavigator();
 
@@ -48,11 +49,16 @@ function MainContainer() {
           component={SetUserData}
         />
         <Stack.Screen
+          name="Data2"
+          coptions={{ headerShown: false }}
+          component={UpdateUserData}
+        />
+        <Stack.Screen
           name="NewMatches1"
           options={{ headerShown: false }}
           component={NewMatchesScreen}
         />
-          <Stack.Screen
+        <Stack.Screen
           name="Messages1"
           options={{ headerShown: false }}
           component={MessageScreen}
