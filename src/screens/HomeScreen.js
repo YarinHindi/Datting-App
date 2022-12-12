@@ -30,35 +30,39 @@ const HomeScreen = ({navigation}) => {
   const usersfilter = users.map(({id,name,bio,photoURL})=>({id,name,bio,photoURL}))
   const addLikeAndcheckMatch = async () =>{
   try {
-    firestore().collection('likes').add({swippingUser: userId, swippedUser:users[currentCard].id });
-    let flag =  false;
-    (await firestore().collection('likes').where('swippingUser','==',users[currentCard].id).get()).forEach(
-      (doc)=>{
-        if(doc.data().swippedUser==userId){
-            flag = true;
-        }
-      }
-    )
-
-    if(flag){
-      firestore().collection('matches').add({userMatched:[userId,users[currentCard].id]});
-      // navigation.navigate('NewMatches1');
+    const userRef  = firestore().collection('users').doc(userId).collection('MySwipes');
+    console.log((await userRef.get()).size);
+   
+    if( (await  userRef.get()).size >0){
+      userRef.doc(userId).update("likes",firebase.firestore.FieldValue.arrayUnion(users[currentCard].id));
+    }else{
+      userRef.doc(userId).set({likes:[users[currentCard].id],unlikes:[]})
     }
+    const otherUserRef = firestore().collection('users').doc(users[currentCard].id).collection('MySwipes');
 
-    // await firestore().collection('matches').add({userMatched:[userId,Users[currentCard].id]});
-    // const a = (await firestore().collection('matches').where('userMatched','array-contains',userId).get()).docs.map((doc)=>({
-    //   ...doc.data(),
-    // })
-
-    // );
-    // console.log(a);
+    if((await otherUserRef.get()).size>0){
+      if ((await otherUserRef.where('likes','array-contains',userId).get()).size>0){
+        firestore().collection('matches').add({userMatched:[userId,users[currentCard].id]});
+      }
+    }
   } catch (e) {
     console.error("Error adding document: ", e);
   }
 }
 const unLike = async ()=>{
- await  firestore().collection('unlikes').add({swippingUser: userId, swippedUser:users[currentCard].id });
+  try {
+    const userRef  = firestore().collection('users').doc(userId).collection('MySwipes');
+    console.log((await userRef.get()).size);
+    if( (await  userRef.get()).size >0){
+      userRef.doc(userId).update("unlikes",firebase.firestore.FieldValue.arrayUnion(users[currentCard].id));
+    }else{
+      userRef.doc(userId).set({likes:[],unlike:[users[currentCard].id]})
+    } 
+  }catch (e) {
+      console.error("Error adding document: ", e);
+    }
 }
+
   const SwipeRight = ()=>{
     addLikeAndcheckMatch();
     nextCard();
