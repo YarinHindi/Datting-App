@@ -14,6 +14,8 @@ const HomeScreen = ({navigation}) => {
   const [btn,setBtn] = useState(false);
   const { currentUser } = firebase.auth();
   const userId = currentUser.uid;
+  const [likes,setLikes] = useState([]);
+  const [unlikes,setUnLikes] = useState([])
   const [currentCard,setCurrentCard] = useState(0)
   useEffect(
     ()=>
@@ -23,10 +25,20 @@ const HomeScreen = ({navigation}) => {
           ...doc.data(),
         })
 
-        )
+        ).filter((currDoc)=> filterUsers(currDoc))
       )
-    ),[]
+    ),[likes,unlikes]
   )
+  useEffect(
+    ()=>
+    firestore().collection('users').doc(userId).collection('MySwipes').onSnapshot(
+      (snapshot)=>snapshot.forEach(docsnap =>{
+        setLikes(docsnap.data().likes);
+        setUnLikes(docsnap.data().unlikes);
+      })
+      ),[]
+    )
+
   const usersfilter = users.map(({id,name,bio,photoURL})=>({id,name,bio,photoURL}))
   const addLikeAndcheckMatch = async () =>{
   try {
@@ -64,22 +76,27 @@ const unLike = async ()=>{
 }
 
   const SwipeRight = ()=>{
+    if(users.length>0){
     addLikeAndcheckMatch();
+    }
     nextCard();
   };
   const SwipeLeft = ()=>{
+    if(users.length>0){
     unLike();
+    }
     nextCard();
   };
   const nextCard = ()=>{
     if (users.length>currentCard){
       setCurrentCard((prev)=>prev+1);
-      
-      if(users.length-1==currentCard){
-        setBtn((prev)=>prev=true);
-        console.warn('Stack card is epmty!!')  
-      }
     }
+      
+    //   if(users.length-1==currentCard ||users.length==0){
+    //     setBtn((prev)=>prev=true);
+    //     console.warn('Stack card is epmty!!')  
+      
+    // }
 }
   const fetchCard = ()=>{
     if(users.length>currentCard){
@@ -97,6 +114,33 @@ const unLike = async ()=>{
     }
   }
   let props = fetchCard();
+
+  const filterUsers = (doc)=>{
+      if(likes.some(item=> item==doc.id) || unlikes.some(item=> item==doc.id)){
+        return false;
+      }else{
+        return true;
+      }
+  }
+  
+// console.log(likes);
+// console.log(unlikes);
+// console.log(users.length)
+// console.log(currentCard);
+useEffect(()=>{
+  if(users.length==currentCard ||users.length==0){
+    setBtn((prev)=>prev=true);
+    if(users.length==0){
+      setCurrentCard(0);
+    }  
+}else{
+  setBtn((prev)=>prev=false);
+}
+
+}
+
+)
+ 
   return (
       <View style = {{flex :1}} >
         <View>
