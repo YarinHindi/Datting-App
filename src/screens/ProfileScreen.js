@@ -5,9 +5,8 @@ import {
   SafeAreaView,
   Image,
   Pressable,
-  Button,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import auth, { firebase } from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
 
@@ -18,6 +17,7 @@ const ProfileScreen = ({ navigation }) => {
   const [bio, setBio] = useState("");
   const [lookingFor, setLookingFor] = useState("");
   const [image, setImage] = useState(currentUser.photoURL);
+  let i = 0;
 
   const edit = () => {
     navigation.navigate("Data2");
@@ -32,27 +32,50 @@ const ProfileScreen = ({ navigation }) => {
   };
 
   const setDatas = (currentUser) => {
+    // firestore()
+    //   .collection("users")
+    //   .where("id", "==", currentUser.uid)
+    //   .onSnapshot((Snapshot) =>
+    //     Snapshot.forEach((documentSnapshot) => {
+    //       setBio(documentSnapshot.data().bio);
+    //       setLookingFor(documentSnapshot.data().lookingFor);
+    //       setGender(documentSnapshot.data().gender);
+    //       setName(documentSnapshot.data().name);
+    //       setImage(documentSnapshot.data().photoURL);
+    //     })
+    //   );
+  };
+  // firestore()
+  //   .collection("users")
+  //   // Filter results
+  //   .where("id", "==", currentUser.uid)
+  //   .get()
+  //   .then((querySnapshot) => {
+  //     querySnapshot.forEach((documentSnapshot) => {
+  //       setBio(documentSnapshot.data().bio);
+  //       setLookingFor(documentSnapshot.data().lookingFor);
+  //       setGender(documentSnapshot.data().gender);
+  //       setName(documentSnapshot.data().name);
+  //       setImage(documentSnapshot.data().photoURL);
+  //     });
+  //   });
+
+  const reloadData = () => {};
+
+  useEffect(() => {
     firestore()
       .collection("users")
-      // Filter results
       .where("id", "==", currentUser.uid)
-      .get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((documentSnapshot) => {
+      .onSnapshot((Snapshot) =>
+        Snapshot.forEach((documentSnapshot) => {
           setBio(documentSnapshot.data().bio);
           setLookingFor(documentSnapshot.data().lookingFor);
           setGender(documentSnapshot.data().gender);
           setName(documentSnapshot.data().name);
           setImage(documentSnapshot.data().photoURL);
-        });
-      });
-  };
-
-  const reloadData = () => {
-    setDatas(currentUser);
-  };
-
-  setDatas(currentUser);
+        })
+      );
+  }, [currentUser]);
 
   return (
     <SafeAreaView style={theStyle.root}>
