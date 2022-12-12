@@ -8,6 +8,7 @@ const ChatRow = ({ matchDetails }) => {
   const [matchedUserInfo, setmatchedUserInfo] = useState(null);
   const [URL, setURL] = useState("");
   const [name, setName] = useState("");
+  const [docId, setdocId] = useState("");
   const navigation = useNavigation();
   const { currentUser } = firebase.auth();
   let otherUser;
@@ -24,7 +25,8 @@ const ChatRow = ({ matchDetails }) => {
         .onSnapshot((snapshot) =>
           setmatchedUserInfo(
             snapshot.docs.map((doc) => ({
-              ...doc.data(),
+                ...doc.data(),
+
             }))
           )
         ),
@@ -35,6 +37,7 @@ const ChatRow = ({ matchDetails }) => {
     const curName = await matchedUserInfo[0].name;
     setURL(photoURL);
     setName(curName);
+
   };
 
   makeUrlName();
@@ -54,8 +57,7 @@ const ChatRow = ({ matchDetails }) => {
       ]}
       onPress={() =>
         navigation.navigate("Messages1", {
-          matchDetails: matchDetails,
-          // userId:userId,
+          matchDetails: {name:name, photo: URL,otherUserId: otherUser,docId:matchDetails.docId},
         })
       }
     >
