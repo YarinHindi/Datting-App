@@ -7,10 +7,10 @@ const ReceiverMessage = ({message}) => {
     <View style={[styles.Cont,styles.insideCont]}>
 
       <Image
-      style={{height:12,width:12,borderRadius:100,position:'absolute',top:0,left:14}}
+      style={{height:26,width:26,borderRadius:100,position:'absolute',top:0,left:-30}}
          source={{uri:message.senderphotoURL}}
       />
-      <Text style={{color: 'white',}}>
+      <Text style={{color: 'white'}}>
         {message.message}
       </Text>
     </View>
@@ -22,10 +22,11 @@ const styles = StyleSheet.create({
         backgroundColor:'red',
         borderRadius:8,
         borderTopLeftRadius:0,
-        marginHorizontal:3,
-        marginVertical:2,
-        marginLeft:14,
-        paddingVertical:3,
+        marginHorizontal:6,
+        marginVertical:7,
+        paddingVertical:5,
+        paddingHorizontal:5,
+        marginLeft:30,
     },
     insideCont:{
         alignSelf:'flex-start',

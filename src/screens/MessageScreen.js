@@ -101,7 +101,6 @@ const MessageScreen = () => {
             <ReceiverMessage key={message.id} message={message}/>
         )
     }
-
         />
         </TouchableWithoutFeedback>
 
@@ -113,7 +112,6 @@ const MessageScreen = () => {
                         value = {input}
             />
             <Button onPress={sendMessage} title="Send" color="#FF5864"  />
-            
         </View>
 
         </KeyboardAvoidingView>
