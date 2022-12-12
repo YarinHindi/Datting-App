@@ -56,7 +56,7 @@ const unLike = async ()=>{
     if( (await  userRef.get()).size >0){
       userRef.doc(userId).update("unlikes",firebase.firestore.FieldValue.arrayUnion(users[currentCard].id));
     }else{
-      userRef.doc(userId).set({likes:[],unlike:[users[currentCard].id]})
+      userRef.doc(userId).set({likes:[],unlikes:[users[currentCard].id]})
     } 
   }catch (e) {
       console.error("Error adding document: ", e);
