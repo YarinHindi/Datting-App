@@ -18,8 +18,8 @@ const SetUserData = ({ navigation }) => {
   const { currentUser } = firebase.auth();
   const [name, setName] = useState("");
   const [bio, setBio] = useState("");
-  const [gender, setGender] = useState("");
-  const [lookingFor, setLookingFor] = useState("");
+  const [gender, setGender] = useState("MALE");
+  const [lookingFor, setLookingFor] = useState("MALE");
   const [image, setImage] = useState(currentUser.photoURL);
 
   const uploadImageToStorage = (path, imageName) => {
@@ -74,7 +74,6 @@ const SetUserData = ({ navigation }) => {
         photoURL: image.path,
       });
     });
-    // auth().signOut();
   };
 
   return (
