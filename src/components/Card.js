@@ -1,16 +1,37 @@
 import { View, Text,StyleSheet,ImageBackground } from 'react-native'
 import React from 'react'
+import CountDown from 'react-native-countdown-component';
 
 const Card = (props) => {
   const{id,name,bio,photoURL} = props.user;
+  const blocked = props.blocked;
+  console.log(blocked,"dsadasdsads")
 
- function showCard(){
+ const isBlocked = ()=>{
+  if(blocked)return(
+    <View>
+    <View style={{alignItems:'center'}}>
+    <Text style={{fontSize:20,fontWeight:'bold',color:'white'}}>Swipes end can swipe agian in</Text>
+    </View>
+    <CountDown
+    size={30}
+    timeToShow = {['H','M','S']}
+    until= {60*60*12}
+    />
+    </View>
+  )
+ }
+
+  function showCard(){
     if(id!=-1){
-      return (        <ImageBackground
+      return (        
+      <ImageBackground
         source= {{uri: photoURL}}
           style = {styles.image}>
+            {isBlocked()}
             <Text style = {styles.name}> {name}</Text>
             <Text style = {styles.bio}> {bio}. </Text>
+            
         </ImageBackground>);
     }else{
       return ( 

@@ -10,35 +10,49 @@ import firestore from '@react-native-firebase/firestore';
 import { firebase } from "@react-native-firebase/auth";
 
 const HomeScreen = ({navigation}) => {
+  const [likes,setLikes] = useState([]);
+  const [unlikes,setUnLikes] = useState([])
   const [users,setUsers] = useState([]);
   const [btn,setBtn] = useState(false);
   const { currentUser } = firebase.auth();
   const userId = currentUser.uid;
-  const [likes,setLikes] = useState([]);
-  const [unlikes,setUnLikes] = useState([])
   const [currentCard,setCurrentCard] = useState(0)
-  useEffect(
-    ()=>
-    firestore().collection('users').where('id','!=',userId).onSnapshot(
-      (snapshot)=>setUsers(
-        snapshot.docs.map((doc)=>({
-          ...doc.data(),
-        })
+  const [swipeBlock,setSwipeBlock] = useState(false);
+  const numOfSwipesTillBlock = 10;
+  const [swipeCounter,setswipeCounter] = useState(0);
+  const [lastSwipeTime,setLastSwipeTime] = useState(0);
+  const timeStamp = new Date();
 
-        ).filter((currDoc)=> filterUsers(currDoc))
-      )
-    ),[likes,unlikes]
-  )
+  
   useEffect(
-    ()=>
-    firestore().collection('users').doc(userId).collection('MySwipes').onSnapshot(
-      (snapshot)=>snapshot.forEach(docsnap =>{
-        setLikes(docsnap.data().likes);
-        setUnLikes(docsnap.data().unlikes);
-      })
-      ),[]
-    )
+    () => {
+     firestore().collection('users').where('id', '!=', userId).get().then((snap)=>
+     {
+      let testUsers = snap.docs.map(doc =>doc.data());
+           firestore().collection('users').doc(userId).collection('MySwipes').get().then((swipe) => {
+            
+            let swipeTime = swipe.docs.map(doc => doc.data().lastSwipeTime);
+            if(swipeTime.length>0)setLastSwipeTime(swipeTime[0])
+            let testUnLikes = [];
+            let testLikes = [];
+            let testUnlikesBefore = swipe.docs.map(doc => doc.data().unlikes);
 
+            if(testUnlikesBefore.length>0) testUnLikes = testUnlikesBefore[0];
+            
+            
+            let testLikesBefore = swipe.docs.map(doc => doc.data().likes);
+            if(testLikesBefore.length>0)testLikes = testLikesBefore[0];
+            let swipes = [...testLikes,...testUnLikes];
+            let filteredArr = testUsers.filter(u => !swipes.find(un => u.id == un));
+            console.log(filteredArr);
+            setUsers(filteredArr)
+           })
+     }
+
+     );
+    },[]);
+      
+ 
   const usersfilter = users.map(({id,name,bio,photoURL})=>({id,name,bio,photoURL}))
   const addLikeAndcheckMatch = async () =>{
   try {
@@ -47,8 +61,10 @@ const HomeScreen = ({navigation}) => {
    
     if( (await  userRef.get()).size >0){
       userRef.doc(userId).update("likes",firebase.firestore.FieldValue.arrayUnion(users[currentCard].id));
+      userRef.doc(userId).update("lastSwipeTime",firebase.firestore.Timestamp.now().toMillis());
     }else{
-      userRef.doc(userId).set({likes:[users[currentCard].id],unlikes:[]})
+      userRef.doc(userId).set({likes:[users[currentCard].id],unlikes:[],lastSwipeTime
+        : firebase.firestore.Timestamp.now().toMillis()})
     }
     const otherUserRef = firestore().collection('users').doc(users[currentCard].id).collection('MySwipes');
 
@@ -64,11 +80,11 @@ const HomeScreen = ({navigation}) => {
 const unLike = async ()=>{
   try {
     const userRef  = firestore().collection('users').doc(userId).collection('MySwipes');
-    console.log((await userRef.get()).size);
     if( (await  userRef.get()).size >0){
       userRef.doc(userId).update("unlikes",firebase.firestore.FieldValue.arrayUnion(users[currentCard].id));
     }else{
-      userRef.doc(userId).set({likes:[],unlikes:[users[currentCard].id]})
+      userRef.doc(userId).set({likes:[],unlikes:[users[currentCard].id],
+        lastSwipeTime:0})
     } 
   }catch (e) {
       console.error("Error adding document: ", e);
@@ -87,60 +103,83 @@ const unLike = async ()=>{
     }
     nextCard();
   };
-  const nextCard = ()=>{
+  const nextCard = async ()=>{
     if (users.length>currentCard){
+      const inc  = firebase.firestore.FieldValue.increment(1);
+      await firestore().collection('users').doc(userId).update({
+        swipeCounter : inc,
+      });
       setCurrentCard((prev)=>prev+1);
+      setswipeCounter((prev)=>prev+1);
+      setLastSwipeTime(timeStamp.getTime());
+      
+
     }
       
-    //   if(users.length-1==currentCard ||users.length==0){
-    //     setBtn((prev)=>prev=true);
-    //     console.warn('Stack card is epmty!!')  
-      
-    // }
 }
   const fetchCard = ()=>{
     if(users.length>currentCard){
       const props = {
         user: usersfilter[currentCard],
+        blocked:swipeBlock,
         
       }
       return props
       }else{
         const props = {
           user: {id:'-1',name:'None',bio:'None',photoURL:'None'},
+          blocked:swipeBlock,
           
       }
       return props
     }
   }
-  let props = fetchCard();
 
-  const filterUsers = (doc)=>{
-      if(likes.some(item=> item==doc.id) || unlikes.some(item=> item==doc.id)){
-        return false;
-      }else{
-        return true;
-      }
-  }
+
+
   
-// console.log(likes);
-// console.log(unlikes);
-// console.log(users.length)
-// console.log(currentCard);
 useEffect(()=>{
-  if(users.length==currentCard ||users.length==0){
+  if(users.length==currentCard ||users.length==0||swipeBlock){
     setBtn((prev)=>prev=true);
     if(users.length==0){
       setCurrentCard(0);
-    }  
+    }
 }else{
   setBtn((prev)=>prev=false);
 }
 
-}
+})
 
-)
- 
+useEffect(
+  ()=>{
+  firestore().collection('users').doc(userId).get().then((snap)=>{
+    setswipeCounter(snap.data().swipeCounter)
+  });
+},[]);
+
+
+useEffect(
+  ()=>{
+    let timeInMil = timeStamp.getTime();
+    let lastSwipe;
+    firestore().collection('users').doc(userId).collection('MySwipes').doc(userId).get().then((doc)=>{
+      let lastSwipe = doc.data().lastSwipeTime;
+    })
+    const milDiff = Math.abs(timeInMil-lastSwipe);
+    const hoursDiff = Math.ceil(milDiff/(1000*3600))
+    if(swipeCounter>=numOfSwipesTillBlock && hoursDiff<12){
+      setSwipeBlock(true)
+    }else{
+      if(hoursDiff>24)firestore().collection('users').doc(userId).update('swipeCounter',0)
+      setSwipeBlock(true);      
+    }
+});
+
+
+
+
+
+let props = fetchCard();
   return (
       <View style = {{flex :1}} >
         <View>
@@ -155,7 +194,7 @@ useEffect(()=>{
                         source = {{uri:'https://cdn-icons-png.flaticon.com/128/390/390973.png'}}/>
           </TouchableOpacity>
           </View>
-            <Card {...props} />
+          <Card {...props}/>
       </View>
     </View>
   );
