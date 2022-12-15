@@ -48,13 +48,14 @@ const SetUserData = ({ navigation }) => {
           id: `${currentUser.uid}`,
           name: `${name ? name : console.warn("no name")}`,
           bio: `${bio ? bio : console.warn("no bio")}`,
+          swipeCounter:0,
           lookingFor: `${
             lookingFor ? lookingFor : console.warn("no looking for")
           }`,
           gender: `${gender ? gender : console.warn("no gender")}`,
           isPremium: false,
           photoURL: `${url}`,
-          swipeCounter:0,
+         
         });
     } catch (e) {
       console.error("Error adding document: ", e);

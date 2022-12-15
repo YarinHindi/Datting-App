@@ -29,6 +29,7 @@ const Card = (props) => {
         const secDiff = Math.ceil(milDiff/(1000))
         const minutesDiff = Math.ceil(milDiff/(1000*60))
         const hoursDiff = Math.ceil(milDiff/(1000*36000))
+        console.log(hoursDiff);
         setHours(12-hoursDiff)
         setMinutes((12*60-minutesDiff)%60)
         setSecond((12*3600-secDiff)%60);
