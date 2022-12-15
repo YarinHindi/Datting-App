@@ -18,7 +18,7 @@ const HomeScreen = ({navigation}) => {
   const userId = currentUser.uid;
   const [currentCard,setCurrentCard] = useState(0)
   const [swipeBlock,setSwipeBlock] = useState(false);
-  const numOfSwipesTillBlock = 10;
+  const numOfSwipesTillBlock = 2;
   const [swipeCounter,setswipeCounter] = useState(0);
   const [lastSwipeTime,setLastSwipeTime] = useState(0);
   const timeStamp = new Date();
@@ -152,27 +152,30 @@ useEffect(()=>{
 
 useEffect(
   ()=>{
-  firestore().collection('users').doc(userId).get().then((snap)=>{
+  firestore().collection('users').doc(userId).onSnapshot((snap)=>{
     setswipeCounter(snap.data().swipeCounter)
   });
 },[]);
 
+// console.log(swipeCounter)
 
 useEffect(
   ()=>{
     let timeInMil = timeStamp.getTime();
-    let lastSwipe;
+    
     firestore().collection('users').doc(userId).collection('MySwipes').doc(userId).get().then((doc)=>{
-      let lastSwipe = doc.data().lastSwipeTime;
+      let lastSwipe =doc.data().lastSwipeTime;
+      const milDiff = Math.abs(timeInMil-lastSwipe);
+      const hoursDiff = Math.ceil(milDiff/(1000*3600))
+      // alert(hoursDiff,swipeCounter);
+      if(swipeCounter>=numOfSwipesTillBlock && hoursDiff<12){
+        setSwipeBlock(true)
+      }else{
+        if(hoursDiff>24)firestore().collection('users').doc(userId).update('swipeCounter',0)
+        setSwipeBlock(false);      
+      }
     })
-    const milDiff = Math.abs(timeInMil-lastSwipe);
-    const hoursDiff = Math.ceil(milDiff/(1000*3600))
-    if(swipeCounter>=numOfSwipesTillBlock && hoursDiff<12){
-      setSwipeBlock(true)
-    }else{
-      if(hoursDiff>24)firestore().collection('users').doc(userId).update('swipeCounter',0)
-      setSwipeBlock(true);      
-    }
+
 });
 
 

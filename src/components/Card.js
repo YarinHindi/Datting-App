@@ -1,23 +1,67 @@
 import { View, Text,StyleSheet,ImageBackground } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import CountDown from 'react-native-countdown-component';
-
+import firestore from '@react-native-firebase/firestore';
+import { firebase } from "@react-native-firebase/auth";
+import { useNavigation } from '@react-navigation/native';
 const Card = (props) => {
+  const navi = useNavigation();
+  const { currentUser } = firebase.auth();
+  const userId = currentUser.uid;
   const{id,name,bio,photoURL} = props.user;
-  const blocked = props.blocked;
-  console.log(blocked,"dsadasdsads")
+  const blocked  =props.blocked;
+  const [second,setSecond] = useState(20);
+  const timeStamp = new Date();
+  let timeInMil = timeStamp.getTime();
 
+    
+
+  useEffect(
+    ()=>{
+      let timeInMil = timeStamp.getTime();
+    
+      firestore().collection('users').doc(userId).collection('MySwipes').doc(userId).get().then((doc)=>{
+        let lastSwipe =doc.data().lastSwipeTime;
+        const milDiff = Math.abs(timeInMil-lastSwipe);
+        const secDiff = Math.ceil(milDiff/(1000))
+        setSecond(5000-secDiff);
+      });
+  },[]);
+  
+  const Timer = ()=>{
+    var timer;
+
+    useEffect(()=>{
+      
+      timer = setInterval(()=>{
+        setSecond(second-1);
+
+        if(second==0){
+          setSecond(20);
+          firestore().collection('users').doc(userId).update("swipeCounter",0);
+        }
+      },1000)
+      return ()=>clearInterval(timer);
+    });
+  }
+
+
+
+const handleFinish  = async   ()=>{
+  // alert('finish')
+  // navi.navigate("Home1");
+  setBlocked(false)
+
+  // await firestore().collection('users').doc(userId).update("swipeCounter",0);
+}
  const isBlocked = ()=>{
   if(blocked)return(
     <View>
     <View style={{alignItems:'center'}}>
     <Text style={{fontSize:20,fontWeight:'bold',color:'white'}}>Swipes end can swipe agian in</Text>
+    <Text style={{fontSize:20,fontWeight:'bold',color:'white'}}>TIME LEFT {second}</Text>
     </View>
-    <CountDown
-    size={30}
-    timeToShow = {['H','M','S']}
-    until= {60*60*12}
-    />
+    <Timer/>
     </View>
   )
  }
