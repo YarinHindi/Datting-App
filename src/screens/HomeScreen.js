@@ -194,15 +194,10 @@ const HomeScreen = ({ navigation }) => {
   useEffect(() => {
     firestore()
       .collection("users")
-      .where("id", "==", currentUser.uid)
-      .onSnapshot((snap) =>
-        snap.forEach(
-          (documentSnapshot) => {
-            setswipeCounter(documentSnapshot.data().swipeCounter);
-          }
-          // setswipeCounter(snap.data().swipeCounter)
-        )
-      );
+      .doc(userId)
+      .onSnapshot((snap) => {
+        setswipeCounter(snap.data().swipeCounter);
+      });
   }, []);
 
   // console.log(swipeCounter)

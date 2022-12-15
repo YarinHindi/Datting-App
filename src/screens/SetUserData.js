@@ -48,6 +48,7 @@ const SetUserData = ({ navigation }) => {
           id: `${currentUser.uid}`,
           name: `${name ? name : console.warn("no name")}`,
           bio: `${bio ? bio : console.warn("no bio")}`,
+          swipeCounter: 0,
           lookingFor: `${
             lookingFor ? lookingFor : console.warn("no looking for")
           }`,
