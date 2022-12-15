@@ -14,7 +14,7 @@ import { firebase } from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
 import storage from "@react-native-firebase/storage";
 
-const UpdateUserData = () => {
+const UpdateUserData = ({ navigation }) => {
   const { currentUser } = firebase.auth();
   const [name, setName] = useState("");
   const [bio, setBio] = useState("");
@@ -97,6 +97,7 @@ const UpdateUserData = () => {
     if (gender) updateGender();
     if (image) updatePhoto();
     alert("We got your data successfully :)");
+    navigation.navigate("Home1");
   };
 
   const uploadImage = () => {
