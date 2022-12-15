@@ -55,7 +55,6 @@ const SetUserData = ({ navigation }) => {
           gender: `${gender ? gender : console.warn("no gender")}`,
           isPremium: false,
           photoURL: `${url}`,
-          swipeCounter: 0,
         });
     } catch (e) {
       console.error("Error adding document: ", e);

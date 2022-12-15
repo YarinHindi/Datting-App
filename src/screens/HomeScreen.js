@@ -24,7 +24,7 @@ const HomeScreen = ({ navigation }) => {
   const userId = currentUser.uid;
   const [currentCard, setCurrentCard] = useState(0);
   const [swipeBlock, setSwipeBlock] = useState(false);
-  const numOfSwipesTillBlock = 2;
+  const numOfSwipesTillBlock = 3;
   const [swipeCounter, setswipeCounter] = useState(0);
   const [lastSwipeTime, setLastSwipeTime] = useState(0);
   const timeStamp = new Date();
@@ -43,6 +43,7 @@ const HomeScreen = ({ navigation }) => {
           .get()
           .then((swipe) => {
             let swipeTime = swipe.docs.map((doc) => doc.data().lastSwipeTime);
+
             if (swipeTime.length > 0) setLastSwipeTime(swipeTime[0]);
             let testUnLikes = [];
             let testLikes = [];
@@ -91,11 +92,13 @@ const HomeScreen = ({ navigation }) => {
             firebase.firestore.Timestamp.now().toMillis()
           );
       } else {
-        userRef.doc(userId).set({
-          likes: [users[currentCard].id],
-          unlikes: [],
-          lastSwipeTime: firebase.firestore.Timestamp.now().toMillis(),
-        });
+        userRef
+          .doc(userId)
+          .set({
+            likes: [users[currentCard].id],
+            unlikes: [],
+            lastSwipeTime: firebase.firestore.Timestamp.now().toMillis(),
+          });
       }
       const otherUserRef = firestore()
         .collection("users")
@@ -130,11 +133,13 @@ const HomeScreen = ({ navigation }) => {
             firebase.firestore.FieldValue.arrayUnion(users[currentCard].id)
           );
       } else {
-        userRef.doc(userId).set({
-          likes: [],
-          unlikes: [users[currentCard].id],
-          lastSwipeTime: 0,
-        });
+        userRef
+          .doc(userId)
+          .set({
+            likes: [],
+            unlikes: [users[currentCard].id],
+            lastSwipeTime: 0,
+          });
       }
     } catch (e) {
       console.error("Error adding document: ", e);
@@ -194,10 +199,15 @@ const HomeScreen = ({ navigation }) => {
   useEffect(() => {
     firestore()
       .collection("users")
-      .doc(userId)
-      .onSnapshot((snap) => {
-        setswipeCounter(snap.data().swipeCounter);
-      });
+      .where("id", "==", currentUser.uid)
+      .onSnapshot((snap) =>
+        snap.forEach(
+          (documentSnapshot) => {
+            setswipeCounter(documentSnapshot.data().swipeCounter);
+          }
+          // setswipeCounter(snap.data().swipeCounter)
+        )
+      );
   }, []);
 
   // console.log(swipeCounter)
@@ -215,9 +225,6 @@ const HomeScreen = ({ navigation }) => {
         let lastSwipe = doc.data().lastSwipeTime;
         const milDiff = Math.abs(timeInMil - lastSwipe);
         const hoursDiff = Math.ceil(milDiff / (1000 * 3600));
-        console.log(timeInMil, lastSwipe);
-        // alert(hoursDiff,swipeCounter);
-        console.log(hoursDiff);
         if (swipeCounter >= numOfSwipesTillBlock && hoursDiff <= 12) {
           setSwipeBlock(true);
         } else {
