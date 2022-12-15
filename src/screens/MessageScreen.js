@@ -7,6 +7,7 @@ import { View,
     TouchableWithoutFeedback,
     Keyboard,
     FlatList,
+    ImageBackground,
 } from 'react-native'
 import React, { useState,useEffect } from 'react'
 import { useRoute } from '@react-navigation/native'
@@ -79,6 +80,12 @@ const MessageScreen = () => {
     }
     return (
     <SafeAreaView style={{flex:1}}>
+            <ImageBackground
+      style = {{flex:1}}
+      source = {{uri:'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzKq99XaTnbfYjwYCr0gLVB95Fyy4Gkn8w9w&usqp=CAU'}}
+      >
+        
+  
         <Header
             {...props}
         />
@@ -103,7 +110,6 @@ const MessageScreen = () => {
     }
         />
         </TouchableWithoutFeedback>
-
       <View style={styles.textCont}>
             <TextInput style ={{height:40,fontWeight:'400' ,color:'green',fontSize:18,lineHeight:28,}}
                         placeholder="Send Message...."
@@ -115,7 +121,7 @@ const MessageScreen = () => {
         </View>
 
         </KeyboardAvoidingView>
-  
+        </ImageBackground>
     </SafeAreaView>
   )
 }
@@ -127,6 +133,7 @@ const styles = StyleSheet.create({
         borderColor:'#FFFFFF',
         paddingHorizontal:5,
         paddingVertical:2,
+        backgroundColor:'white',
     },
 });
 export default MessageScreen
