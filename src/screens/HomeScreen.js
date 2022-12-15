@@ -167,8 +167,10 @@ useEffect(
       let lastSwipe =doc.data().lastSwipeTime;
       const milDiff = Math.abs(timeInMil-lastSwipe);
       const hoursDiff = Math.ceil(milDiff/(1000*3600))
+      console.log(timeInMil,lastSwipe);
       // alert(hoursDiff,swipeCounter);
-      if(swipeCounter>=numOfSwipesTillBlock && hoursDiff<12){
+      console.log(hoursDiff)
+      if(swipeCounter>=numOfSwipesTillBlock && hoursDiff<=12){
         setSwipeBlock(true)
       }else{
         if(hoursDiff>24)firestore().collection('users').doc(userId).update('swipeCounter',0)

@@ -10,7 +10,9 @@ const Card = (props) => {
   const userId = currentUser.uid;
   const{id,name,bio,photoURL} = props.user;
   const blocked  =props.blocked;
-  const [second,setSecond] = useState(20);
+  const [second,setSecond] = useState(0);
+  const [minutes,setMinutes] = useState(0);
+  const [hours,setHours] = useState(0);
   const timeStamp = new Date();
   let timeInMil = timeStamp.getTime();
 
@@ -22,9 +24,17 @@ const Card = (props) => {
     
       firestore().collection('users').doc(userId).collection('MySwipes').doc(userId).get().then((doc)=>{
         let lastSwipe =doc.data().lastSwipeTime;
+        console.log(timeStamp.toLocaleString('en-US'));
         const milDiff = Math.abs(timeInMil-lastSwipe);
         const secDiff = Math.ceil(milDiff/(1000))
-        setSecond(5000-secDiff);
+        const minutesDiff = Math.ceil(milDiff/(1000*60))
+        const hoursDiff = Math.ceil(milDiff/(1000*36000))
+        setHours(12-hoursDiff)
+        setMinutes((12*60-minutesDiff)%60)
+        setSecond((12*3600-secDiff)%60);
+        // setMinutes(12*60-minutesDiff)
+        // console.log(hoursDiff)
+        // setHours(12-hoursDiff);
       });
   },[]);
   
@@ -37,7 +47,16 @@ const Card = (props) => {
         setSecond(second-1);
 
         if(second==0){
-          setSecond(20);
+          setSecond(59);
+          setMinutes(minutes-1);
+        }
+        if(minutes==0){
+          setSecond(59)
+          setMinutes(59)
+          setHours(hours-1);
+        }
+
+        if(hours<=0){
           firestore().collection('users').doc(userId).update("swipeCounter",0);
         }
       },1000)
@@ -45,21 +64,18 @@ const Card = (props) => {
     });
   }
 
-
-
-const handleFinish  = async   ()=>{
-  // alert('finish')
-  // navi.navigate("Home1");
-  setBlocked(false)
-
-  // await firestore().collection('users').doc(userId).update("swipeCounter",0);
-}
  const isBlocked = ()=>{
   if(blocked)return(
     <View>
-    <View style={{alignItems:'center'}}>
-    <Text style={{fontSize:20,fontWeight:'bold',color:'white'}}>Swipes end can swipe agian in</Text>
-    <Text style={{fontSize:20,fontWeight:'bold',color:'white'}}>TIME LEFT {second}</Text>
+    <View style={{alignItems:'center',}}>
+    <Text style={{fontSize:20,fontWeight:'bold',color:'white',marginBottom:20}}>Swipes ends for now :(</Text>
+    <Text style={{fontSize:20,fontWeight:'bold',color:'white',marginBottom:20}}>TIME-LEFT:</Text>
+    <View style={{flexDirection:'row'}}>
+   
+    <Text style={{fontSize:30,fontWeight:'300',color:'white',backgroundColor:'#FF5349',borderRadius:10,paddingTop:5,paddingBottom:5,marginRight:5}}>H:{hours} </Text>
+    <Text style={{fontSize:30,fontWeight:'300',color:'white',backgroundColor:'#FF5349',borderRadius:10,paddingTop:5,paddingBottom:5,marginRight:5,}}>M:{minutes}</Text>
+    <Text style={{fontSize:30,fontWeight:'300',color:'white',backgroundColor:'#FF5349',borderRadius:10,paddingTop:5,paddingBottom:5,marginRight:5,paddingHorizontal:4}}>S:{second}  </Text>
+    </View>
     </View>
     <Timer/>
     </View>
@@ -135,6 +151,15 @@ const styles = StyleSheet.create({
       color: 'white',
       lineHeight: 25,
     },
+    Cont: {
+      backgroundColor:'red',
+      borderRadius:8,
+      borderTopLeftRadius:0,
+      marginHorizontal:6,
+      marginVertical:7,
+      paddingVertical:5,
+      paddingHorizontal:5,
+  },
   
   })
 
