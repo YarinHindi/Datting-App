@@ -1,85 +1,134 @@
 import { View, Text,Image,StyleSheet, ImageBackground,TouchableOpacity } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Logo from '../components/Logo';
 import Card from '../components/Card';
-import Users from '../../data/Users';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import NewMatchesScreen from './NewMatchesScreen';
-import {app,db,getFirestore, collection, addDoc} from "../../firebase/index";
 import { async } from '@firebase/util';
 import firestore from '@react-native-firebase/firestore';
-
-
+import { firebase } from "@react-native-firebase/auth";
 
 const HomeScreen = ({navigation}) => {
-
+  const [users,setUsers] = useState([]);
+  const [btn,setBtn] = useState(false);
+  const { currentUser } = firebase.auth();
+  const userId = currentUser.uid;
   const [currentCard,setCurrentCard] = useState(0)
-const addMatches = async () =>{
-  console.warn('herererere');
+  useEffect(
+    ()=>
+    firestore().collection('users').where('id','!=',userId).onSnapshot(
+      (snapshot)=>setUsers(
+        snapshot.docs.map((doc)=>({
+          ...doc.data(),
+        })
+
+        )
+      )
+    ),[]
+  )
+  const usersfilter = users.map(({id,name,bio,photoURL})=>({id,name,bio,photoURL}))
+  const addLikeAndcheckMatch = async () =>{
   try {
-    await firestore().collection('users').add({id : '31321321', name: 'ddd'})
+    firestore().collection('likes').add({swippingUser: userId, swippedUser:users[currentCard].id });
+    let flag =  false;
+    (await firestore().collection('likes').where('swippingUser','==',users[currentCard].id).get()).forEach(
+      (doc)=>{
+        if(doc.data().swippedUser==userId){
+            flag = true;
+        }
+      }
+    )
+    console.warn(flag);
+
+    if(flag){
+      firestore().collection('matches').add({userMatched:[userId,users[currentCard].id]});
+      // navigation.navigate('NewMatches1');
+    }
+
+    // await firestore().collection('matches').add({userMatched:[userId,Users[currentCard].id]});
+    // const a = (await firestore().collection('matches').where('userMatched','array-contains',userId).get()).docs.map((doc)=>({
+    //   ...doc.data(),
+    // })
+
+    // );
+    // console.log(a);
   } catch (e) {
     console.error("Error adding document: ", e);
   }
 }
-
-
-//used to get users from
- 
+const unLike = async ()=>{
+ await  firestore().collection('unlikes').add({swippingUser: userId, swippedUser:users[currentCard].id });
+}
   const SwipeRight = ()=>{
-    if (Users[currentCard].id!=-1){
-      addMatches();
-    navigation.navigate('NewMatches1');
-    }
-    console.warn(Users[currentCard].id);
+    addLikeAndcheckMatch();
     nextCard();
   };
   const SwipeLeft = ()=>{
-    console.warn(Users[currentCard].id);
+    unLike();
     nextCard();
   };
-
-
   const nextCard = ()=>{
-    if (Users[currentCard].id==-1){
-    // setCurrentCard(currentCard);
-    console.warn('Stack card is epmty!!')
-    }else{
-      setCurrentCard(currentCard+1);
+    if (users.length>currentCard){
+      setCurrentCard((prev)=>prev+1);
+      
+      if(users.length-1==currentCard){
+        setBtn((prev)=>prev=true);
+        console.warn('Stack card is epmty!!')  
+      }
+    }
+}
+  const fetchCard = ()=>{
+    if(users.length>currentCard){
+      const props = {
+        user: usersfilter[currentCard],
+        
+      }
+      return props
+      }else{
+        const props = {
+          user: {id:'-1',name:'None',bio:'None',photoURL:'None'},
+          
+      }
+      return props
     }
   }
+
+  let props = fetchCard();
   return (
       <View style = {{flex :1}} >
         <View>
           <Logo/>
+          {/* if user is not premium */}
+          {/* <Button title='Go premium' onPress={goPremium}/> */}
           <View style = {{flexDirection:'row',justifyContent:'space-evenly'}}>
-          <TouchableOpacity  onPress={()=>SwipeLeft()} >
+          <TouchableOpacity disabled={btn} onPress={()=>SwipeLeft()} >
                 <Image  style = {{height:30,width:30,borderColor:'red'}}
                         source = {{uri:'https://cdn-icons-png.flaticon.com/128/1828/1828665.png'}}/>    
           </TouchableOpacity>
-          <TouchableOpacity  onPress={()=>SwipeRight()} >
+          <TouchableOpacity disabled={btn} onPress={()=>SwipeRight()} >
                 <Image  style = {{height:30,width:30}}
                         source = {{uri:'https://cdn-icons-png.flaticon.com/128/390/390973.png'}}/>
           </TouchableOpacity>
           </View>
-            <Card   user = {Users[currentCard]}/>
-        </View>
-      </View>    
-  )
-}
+            <Card {...props} />
+      </View>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
-  pageContainer:{
-    justifyContent : 'center',
-    alignItems : 'center',
+  pageContainer: {
+    justifyContent: "center",
+    alignItems: "center",
   },
-  card:{
-    width : '95%',
-    height : '85%',
-    borderRadius : 10,
 
-    shadowColor : '#000',
-    shadowOffset:{
+  card: {
+    width: "95%",
+    height: "85%",
+    borderRadius: 10,
+
+    shadowColor: "#000",
+    shadowOffset: {
       width: 0,
       height: 5,
     },
@@ -87,12 +136,11 @@ const styles = StyleSheet.create({
     shadowRadius: 6.68,
     elevation: 11,
   },
-  animatedCard:{
-    width : '100%',
-    height: '100%',
+  animatedCard: {
+    width: "100%",
+    height: "100%",
     // alignItems : 'center',
-  //  justifyContent: 'center',
+    //  justifyContent: 'center',
   },
-
-})
-export default HomeScreen
+});
+export default HomeScreen;
