@@ -22,8 +22,6 @@ const HomeScreen = ({navigation}) => {
   const [swipeCounter,setswipeCounter] = useState(0);
   const [lastSwipeTime,setLastSwipeTime] = useState(0);
   const timeStamp = new Date();
-
-  
   useEffect(
     () => {
      firestore().collection('users').where('id', '!=', userId).get().then((snap)=>
@@ -74,6 +72,7 @@ const HomeScreen = ({navigation}) => {
         firestore().collection('matches').add({userMatched:[userId,users[currentCard].id]});
       }
     }
+  
   } catch (e) {
     console.error("Error adding document: ", e);
   }
@@ -123,7 +122,6 @@ const unLike = async ()=>{
       const props = {
         user: usersfilter[currentCard],
         blocked:swipeBlock,
-        
       }
       return props
       }else{
@@ -160,12 +158,11 @@ useEffect(() => {
         (documentSnapshot) => {
           setswipeCounter(documentSnapshot.data().swipeCounter);
         }
-        // setswipeCounter(snap.data().swipeCounter)
       )
     );
 }, []);
 
-// console.log(swipeCounter)
+console.log(swipeCounter)
 
 useEffect(
   ()=>{
@@ -174,7 +171,10 @@ useEffect(
     firestore().collection('users').doc(userId).collection('MySwipes').doc(userId).get().then((doc)=>{
       let lastSwipe =doc.data().lastSwipeTime;
       const milDiff = Math.abs(timeInMil-lastSwipe);
-      const hoursDiff = Math.ceil(milDiff/(1000*3600))
+      const msInHour = 1000*60*60;;
+      const hoursDiff = Math.round(milDiff/msInHour)
+      console.log(hoursDiff,'dsadsada')
+      console.log(swipeBlock);
       if(swipeCounter>=numOfSwipesTillBlock && hoursDiff<=12){
         setSwipeBlock(true)
       }else{

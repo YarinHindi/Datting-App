@@ -20,23 +20,22 @@ const Card = (props) => {
 
   useEffect(
     ()=>{
-      let timeInMil = timeStamp.getTime();
-    
-      firestore().collection('users').doc(userId).collection('MySwipes').doc(userId).get().then((doc)=>{
-        let lastSwipe =doc.data().lastSwipeTime;
-        console.log(timeStamp.toLocaleString('en-US'));
+  
+      firestore().collection('users').doc(userId).collection('MySwipes').doc(userId).onSnapshot((snap)=>{
+        console.log(snap.data().lastSwipeTime,'nice its working')
+        let timeInMil = timeStamp.getTime();
+        let lastSwipe =snap.data().lastSwipeTime;
         const milDiff = Math.abs(timeInMil-lastSwipe);
-        const secDiff = Math.ceil(milDiff/(1000))
-        const minutesDiff = Math.ceil(milDiff/(1000*60))
-        const hoursDiff = Math.ceil(milDiff/(1000*36000))
-        console.log(hoursDiff);
-        setHours(12-hoursDiff)
+        const msInSec = 1000;
+        const msInMin = msInSec*60;
+        const msInHour = msInMin*60;;
+        const secDiff = Math.round(milDiff/msInSec)
+        const minutesDiff = Math.round(milDiff/msInMin)
+        const hoursDiff = Math.round(milDiff/msInHour)
+        setHours(11-hoursDiff)
         setMinutes((12*60-minutesDiff)%60)
         setSecond((12*3600-secDiff)%60);
-        // setMinutes(12*60-minutesDiff)
-        // console.log(hoursDiff)
-        // setHours(12-hoursDiff);
-      });
+      })
   },[]);
   
   const Timer = ()=>{
@@ -58,6 +57,7 @@ const Card = (props) => {
         }
 
         if(hours<=0){
+          
           firestore().collection('users').doc(userId).update("swipeCounter",0);
         }
       },1000)
