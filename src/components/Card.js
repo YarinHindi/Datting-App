@@ -98,9 +98,9 @@ const Card = (props) => {
       return ( 
       <View style={{alignContent:'center',alignContent:'center',justifyContent:'center'}}>
       <ImageBackground 
-        source= {{uri: 'https://cdn-icons-png.flaticon.com/128/1791/1791330.png'}}
-          style = {{  width: 200,height:200,justifyContent:'flex-end',marginLeft:50,marginTop:70}}>
-            <Text style = {{ fontSize :18,color: 'black',fontWeight : 'bold',}}> there is no more swipes for you get premium</Text>
+        source= {{uri: 'https://st3.depositphotos.com/8776448/14291/i/450/depositphotos_142915315-stock-photo-cartoon-people-woman-and-stop.jpg'}}
+        style = {[styles.image]}>
+            <Text style = {{ fontSize :22,color: 'black',fontWeight : 'bold',textAlign:'center'}}> there is no more swipes stack is empty:(</Text>
         </ImageBackground>
         </View>);
     };
