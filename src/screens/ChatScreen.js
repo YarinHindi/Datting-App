@@ -6,6 +6,9 @@ import { useRoute } from '@react-navigation/native'
 
 const ChatScreen = ({navigation}) => {
 
+
+
+  
   return (
     <SafeAreaView style = {{flex: 1}}>
       <Logo/>

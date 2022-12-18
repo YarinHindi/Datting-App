@@ -15,6 +15,7 @@ const HomeScreen = ({navigation}) => {
   const [users,setUsers] = useState([]);
   const [btn,setBtn] = useState(false);
   const { currentUser } = firebase.auth();
+  
   const userId = currentUser.uid;
   const [currentCard,setCurrentCard] = useState(0)
   const [swipeBlock,setSwipeBlock] = useState(false);

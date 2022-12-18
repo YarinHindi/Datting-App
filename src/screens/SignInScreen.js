@@ -2,15 +2,25 @@ import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, StyleSheet, Button } from "react-native";
 import auth from "@react-native-firebase/auth";
 import Logo from "../components/Logo";
+import firestore from '@react-native-firebase/firestore';
 
 const SignInScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
+  const [initializing, setInitializing] = useState(true);
+  const [user, setUser] = useState();
+ 
+//  const checkIfAdmin  = async ()=>{
+//       firestore().collection('admins').where('id','==',user.uid).get().then(s =>{
+//         if(s.size==0)return false;
+//         else return true;
+//       })
 
+
+
+//  }
   function Login() {
     // Set an initializing state whilst Firebase connects
-    const [initializing, setInitializing] = useState(true);
-    const [user, setUser] = useState();
 
     // Handle user state changes
     function onAuthStateChanged(user) {
@@ -26,7 +36,9 @@ const SignInScreen = ({ navigation }) => {
     if (initializing) return null;
 
     if (user) {
-      navigation.navigate("Home1");
+      // if(checkIfAdmin)navigation.navigate("Home1");
+      // else
+       navigation.navigate("Admin1");
     }
   }
 

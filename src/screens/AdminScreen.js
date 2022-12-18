@@ -1,10 +1,37 @@
-import { View, Text } from 'react-native'
-import React from 'react'
+import { View, Text, FlatList } from 'react-native'
+import React, { useEffect, useState } from 'react';
+import firestore from '@react-native-firebase/firestore';
+import Header from '../components/Header';
+import UsersRowDisplay from '../components/UsersRowDisplay';
+
+
 
 const AdminScreen = () => {
+  const [users,setUsers] = useState([]);
+
+
+  useEffect(
+    ()=> {
+    firestore().collection('users').onSnapshot((snap)=>{
+      setUsers(snap.docs.map((doc)=>doc.data()))
+    })
+  } ,[])
+
+
+  let props = {
+    userInfo:{name:'Yarin-Admin',photo:'',}
+}
+
   return (
     <View>
-      <Text>AdminScreen</Text>
+      <Header {...props}  />
+      <FlatList
+           data={users}
+          ma
+           keyExtractor = {item=> item.id}
+           renderItem = {({item}) => <UsersRowDisplay UserDetails = {item}/>}
+      
+      />
     </View>
   )
 }

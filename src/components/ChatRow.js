@@ -20,17 +20,19 @@ const ChatRow = ({ matchDetails }) => {
   }
 
   useEffect(
-    ()=>
-    firestore().collection('matches').doc(matchDetails.docId).collection('messages')
-    .orderBy("timestamp",'asc').onSnapshot(
-      (snapshot)=>
-        snapshot.forEach((snapdoc)=>{
-          setLastMessage(snapdoc.data().message);
-        })
-      )
-      
-    ,[]
-  )
+    ()=>{
+    firestore().collection('matches').doc(matchDetails.docId).collection('messages').get().then(s=> {
+      if(s.size>0){
+        firestore().collection('matches').doc(matchDetails.docId).collection('messages')
+        .orderBy("timestamp",'asc').onSnapshot(
+          (snapshot)=>
+            snapshot.forEach((snapdoc)=>{
+              setLastMessage(snapdoc.data().message);
+            })
+          )
+      }
+    });
+      },[])
 
   useEffect(
     () =>

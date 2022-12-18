@@ -14,26 +14,28 @@ const Card = (props) => {
   const [minutes,setMinutes] = useState(0);
   const [hours,setHours] = useState(0);
   const timeStamp = new Date();
-  let timeInMil = timeStamp.getTime();
+
 
     
 
   useEffect(
     ()=>{
   
-      firestore().collection('users').doc(userId).collection('MySwipes').doc(userId).onSnapshot((snap)=>{
-        let timeInMil = timeStamp.getTime();
-        let lastSwipe =snap.data().lastSwipeTime;
-        const milDiff = Math.abs(timeInMil-lastSwipe);
-        const msInSec = 1000;
-        const msInMin = msInSec*60;
-        const msInHour = msInMin*60;;
-        const secDiff = Math.round(milDiff/msInSec)
-        const minutesDiff = Math.round(milDiff/msInMin)
-        const hoursDiff = Math.round(milDiff/msInHour)
-        setHours(11-hoursDiff)
-        setMinutes((12*60-minutesDiff)%60)
-        setSecond((12*3600-secDiff)%60);
+      firestore().collection('users').doc(userId).collection('MySwipes').onSnapshot((snap)=>{
+        snap.forEach((snapdoc)=>{
+          let timeInMil = timeStamp.getTime();
+          let lastSwipe =snapdoc.data().lastSwipeTime;
+          const milDiff = Math.abs(timeInMil-lastSwipe);
+          const msInSec = 1000;
+          const msInMin = msInSec*60;
+          const msInHour = msInMin*60;;
+          const secDiff = Math.round(milDiff/msInSec)
+          const minutesDiff = Math.round(milDiff/msInMin)
+          const hoursDiff = Math.round(milDiff/msInHour)
+          setHours(12-hoursDiff)
+          setMinutes((12*60-minutesDiff)%60)
+          setSecond((12*3600-secDiff)%60);
+        })
       })
   },[]);
   

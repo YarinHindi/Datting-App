@@ -11,6 +11,7 @@ import SetUserData from "../screens/SetUserData";
 import HomeBarNavigation from "./HomeBarNavigation";
 import MessageScreen from "../screens/MessageScreen";
 import UpdateUserData from "../screens/UpdateUserData";
+import AdminScreen from "../screens/AdminScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -62,6 +63,11 @@ function MainContainer() {
           name="Messages1"
           options={{ headerShown: false }}
           component={MessageScreen}
+        />
+          <Stack.Screen
+          name="Admin1"
+          options={{ headerShown: false }}
+          component={AdminScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>
