@@ -173,8 +173,6 @@ useEffect(
       const milDiff = Math.abs(timeInMil-lastSwipe);
       const msInHour = 1000*60*60;;
       const hoursDiff = Math.round(milDiff/msInHour)
-      console.log(hoursDiff,'dsadsada')
-      console.log(swipeBlock);
       if(swipeCounter>=numOfSwipesTillBlock && hoursDiff<=12){
         setSwipeBlock(true)
       }else{

@@ -69,13 +69,12 @@ const Card = (props) => {
   if(blocked)return(
     <View>
     <View style={{alignItems:'center',}}>
-    <Text style={{fontSize:20,fontWeight:'bold',color:'white',marginBottom:20}}>Swipes ends for now :(</Text>
-    <Text style={{fontSize:20,fontWeight:'bold',color:'white',marginBottom:20}}>TIME-LEFT:</Text>
+    <Text style={styles.TimerText}>Swipes ends for now :(</Text>
+    <Text style={styles.TimerText}>TIME-LEFT:</Text>
     <View style={{flexDirection:'row'}}>
-   
-    <Text style={{fontSize:30,fontWeight:'300',color:'white',backgroundColor:'#FF5349',borderRadius:10,paddingTop:5,paddingBottom:5,marginRight:5}}>H:{hours} </Text>
-    <Text style={{fontSize:30,fontWeight:'300',color:'white',backgroundColor:'#FF5349',borderRadius:10,paddingTop:5,paddingBottom:5,marginRight:5,}}>M:{minutes}</Text>
-    <Text style={{fontSize:30,fontWeight:'300',color:'white',backgroundColor:'#FF5349',borderRadius:10,paddingTop:5,paddingBottom:5,marginRight:5,paddingHorizontal:4}}>S:{second}  </Text>
+    <Text style={styles.TimerTime}>H:{hours} </Text>
+    <Text style={styles.TimerTime}>M:{minutes}</Text>
+    <Text style={styles.TimerTime}>S:{second}  </Text>
     </View>
     </View>
     <Timer/>
@@ -100,7 +99,7 @@ const Card = (props) => {
       <ImageBackground 
         source= {{uri: 'https://st3.depositphotos.com/8776448/14291/i/450/depositphotos_142915315-stock-photo-cartoon-people-woman-and-stop.jpg'}}
         style = {[styles.image]}>
-            <Text style = {{ fontSize :22,color: 'black',fontWeight : 'bold',textAlign:'center'}}> there is no more swipes stack is empty:(</Text>
+            <Text style = {{ fontSize :22,color: 'black',fontWeight : 'bold',textAlign:'center'}}> There is no more swipes stack is empty:(</Text>
         </ImageBackground>
         </View>);
     };
@@ -160,6 +159,22 @@ const styles = StyleSheet.create({
       marginVertical:7,
       paddingVertical:5,
       paddingHorizontal:5,
+  },
+  TimerText :{
+    fontSize:20,
+    fontWeight:'bold',
+    color:'white',
+    marginBottom:20,
+
+  },
+  TimerTime :{
+    fontSize:30,
+    fontWeight:'300',
+    color:'white',
+    backgroundColor:'#FF5349',
+    borderRadius:10,
+    paddingTop:5,paddingBottom:5,
+    marginRight:5,
   },
   
   })
