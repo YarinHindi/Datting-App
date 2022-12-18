@@ -162,7 +162,6 @@ useEffect(() => {
     );
 }, []);
 
-console.log(swipeCounter)
 
 useEffect(
   ()=>{

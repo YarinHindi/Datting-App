@@ -22,7 +22,6 @@ const Card = (props) => {
     ()=>{
   
       firestore().collection('users').doc(userId).collection('MySwipes').doc(userId).onSnapshot((snap)=>{
-        console.log(snap.data().lastSwipeTime,'nice its working')
         let timeInMil = timeStamp.getTime();
         let lastSwipe =snap.data().lastSwipeTime;
         const milDiff = Math.abs(timeInMil-lastSwipe);
