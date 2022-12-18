@@ -22,7 +22,6 @@ const ChatList = () => {
         ),[userId]
     );
 
-      console.log(matches);
     return (
         matches.length > 0 ?(
             <FlatList 
