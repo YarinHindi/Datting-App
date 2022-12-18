@@ -9,6 +9,7 @@ const ChatRow = ({ matchDetails }) => {
   const [URL, setURL] = useState("");
   const [name, setName] = useState("");
   const [docId, setdocId] = useState("");
+  const [lastMessage,setLastMessage] = useState("Say Hi!");
   const navigation = useNavigation();
   const { currentUser } = firebase.auth();
   let otherUser;
@@ -17,6 +18,20 @@ const ChatRow = ({ matchDetails }) => {
   } else {
     otherUser = matchDetails.userMatched[0];
   }
+
+  useEffect(
+    ()=>
+    firestore().collection('matches').doc(matchDetails.docId).collection('messages')
+    .orderBy("timestamp",'asc').onSnapshot(
+      (snapshot)=>
+        snapshot.forEach((snapdoc)=>{
+          setLastMessage(snapdoc.data().message);
+        })
+      )
+      
+    ,[]
+  )
+
   useEffect(
     () =>
       firestore()
@@ -40,8 +55,8 @@ const ChatRow = ({ matchDetails }) => {
 
   };
 
-  makeUrlName();
 
+  makeUrlName();
   return (
     <TouchableOpacity
       style={[
@@ -69,7 +84,6 @@ const ChatRow = ({ matchDetails }) => {
           marginRight: 14,
           marginLeft: 6,
         }}
-        // source={{uri: matchedUserInfo?.photoURL}}
         source={{ uri: URL }}
       />
 
@@ -77,7 +91,7 @@ const ChatRow = ({ matchDetails }) => {
         <Text style={{ fontWeight: "bold", fontSize: 18, lineHeight: 28 }}>
           {name}
         </Text>
-        <Text>Say Hi!</Text>
+        <Text>{lastMessage}</Text>
       </View>
     </TouchableOpacity>
   );
