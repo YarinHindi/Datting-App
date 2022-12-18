@@ -17,28 +17,24 @@ const Card = (props) => {
   let timeInMil = timeStamp.getTime();
 
   useEffect(() => {
-    let timeInMil = timeStamp.getTime();
-
     firestore()
       .collection("users")
       .doc(userId)
       .collection("MySwipes")
       .doc(userId)
-      .get()
-      .then((doc) => {
-        let lastSwipe = doc.data().lastSwipeTime;
-        console.log(timeStamp.toLocaleString("en-US"));
+      .onSnapshot((snap) => {
+        let timeInMil = timeStamp.getTime();
+        let lastSwipe = snap.data().lastSwipeTime;
         const milDiff = Math.abs(timeInMil - lastSwipe);
-        const secDiff = Math.ceil(milDiff / 1000);
-        const minutesDiff = Math.ceil(milDiff / (1000 * 60));
-        const hoursDiff = Math.ceil(milDiff / (1000 * 36000));
-        console.log(hoursDiff);
-        setHours(12 - hoursDiff);
+        const msInSec = 1000;
+        const msInMin = msInSec * 60;
+        const msInHour = msInMin * 60;
+        const secDiff = Math.round(milDiff / msInSec);
+        const minutesDiff = Math.round(milDiff / msInMin);
+        const hoursDiff = Math.round(milDiff / msInHour);
+        setHours(11 - hoursDiff);
         setMinutes((12 * 60 - minutesDiff) % 60);
         setSecond((12 * 3600 - secDiff) % 60);
-        // setMinutes(12*60-minutesDiff)
-        // console.log(hoursDiff)
-        // setHours(12-hoursDiff);
       });
   }, []);
 
@@ -72,70 +68,12 @@ const Card = (props) => {
       return (
         <View>
           <View style={{ alignItems: "center" }}>
-            <Text
-              style={{
-                fontSize: 20,
-                fontWeight: "bold",
-                color: "white",
-                marginBottom: 20,
-              }}
-            >
-              Swipes ends for now :(
-            </Text>
-            <Text
-              style={{
-                fontSize: 20,
-                fontWeight: "bold",
-                color: "white",
-                marginBottom: 20,
-              }}
-            >
-              TIME-LEFT:
-            </Text>
+            <Text style={styles.TimerText}>Swipes ends for now :(</Text>
+            <Text style={styles.TimerText}>TIME-LEFT:</Text>
             <View style={{ flexDirection: "row" }}>
-              <Text
-                style={{
-                  fontSize: 30,
-                  fontWeight: "300",
-                  color: "white",
-                  backgroundColor: "#FF5349",
-                  borderRadius: 10,
-                  paddingTop: 5,
-                  paddingBottom: 5,
-                  marginRight: 5,
-                }}
-              >
-                H:{hours}{" "}
-              </Text>
-              <Text
-                style={{
-                  fontSize: 30,
-                  fontWeight: "300",
-                  color: "white",
-                  backgroundColor: "#FF5349",
-                  borderRadius: 10,
-                  paddingTop: 5,
-                  paddingBottom: 5,
-                  marginRight: 5,
-                }}
-              >
-                M:{minutes}
-              </Text>
-              <Text
-                style={{
-                  fontSize: 30,
-                  fontWeight: "300",
-                  color: "white",
-                  backgroundColor: "#FF5349",
-                  borderRadius: 10,
-                  paddingTop: 5,
-                  paddingBottom: 5,
-                  marginRight: 5,
-                  paddingHorizontal: 4,
-                }}
-              >
-                S:{second}{" "}
-              </Text>
+              <Text style={styles.TimerTime}>H:{hours} </Text>
+              <Text style={styles.TimerTime}>M:{minutes}</Text>
+              <Text style={styles.TimerTime}>S:{second} </Text>
             </View>
           </View>
           <Timer />
@@ -163,19 +101,20 @@ const Card = (props) => {
         >
           <ImageBackground
             source={{
-              uri: "https://cdn-icons-png.flaticon.com/128/1791/1791330.png",
+              uri: "https://st3.depositphotos.com/8776448/14291/i/450/depositphotos_142915315-stock-photo-cartoon-people-woman-and-stop.jpg",
             }}
-            style={{
-              width: 200,
-              height: 200,
-              justifyContent: "flex-end",
-              marginLeft: 50,
-              marginTop: 70,
-            }}
+            style={[styles.image]}
           >
-            <Text style={{ fontSize: 18, color: "black", fontWeight: "bold" }}>
+            <Text
+              style={{
+                fontSize: 22,
+                color: "black",
+                fontWeight: "bold",
+                textAlign: "center",
+              }}
+            >
               {" "}
-              there is no more swipes for you get premium
+              There is no more swipes stack is empty:(
             </Text>
           </ImageBackground>
         </View>
@@ -233,6 +172,22 @@ const styles = StyleSheet.create({
     marginVertical: 7,
     paddingVertical: 5,
     paddingHorizontal: 5,
+  },
+  TimerText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "white",
+    marginBottom: 20,
+  },
+  TimerTime: {
+    fontSize: 30,
+    fontWeight: "300",
+    color: "white",
+    backgroundColor: "#FF5349",
+    borderRadius: 10,
+    paddingTop: 5,
+    paddingBottom: 5,
+    marginRight: 5,
   },
 });
 

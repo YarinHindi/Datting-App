@@ -28,7 +28,6 @@ const HomeScreen = ({ navigation }) => {
   const [swipeCounter, setswipeCounter] = useState(0);
   const [lastSwipeTime, setLastSwipeTime] = useState(0);
   const timeStamp = new Date();
-
   useEffect(() => {
     firestore()
       .collection("users")
@@ -201,16 +200,11 @@ const HomeScreen = ({ navigation }) => {
       .collection("users")
       .where("id", "==", currentUser.uid)
       .onSnapshot((snap) =>
-        snap.forEach(
-          (documentSnapshot) => {
-            setswipeCounter(documentSnapshot.data().swipeCounter);
-          }
-          // setswipeCounter(snap.data().swipeCounter)
-        )
+        snap.forEach((documentSnapshot) => {
+          setswipeCounter(documentSnapshot.data().swipeCounter);
+        })
       );
   }, []);
-
-  // console.log(swipeCounter)
 
   useEffect(() => {
     let timeInMil = timeStamp.getTime();
@@ -224,7 +218,8 @@ const HomeScreen = ({ navigation }) => {
       .then((doc) => {
         let lastSwipe = doc.data().lastSwipeTime;
         const milDiff = Math.abs(timeInMil - lastSwipe);
-        const hoursDiff = Math.ceil(milDiff / (1000 * 3600));
+        const msInHour = 1000 * 60 * 60;
+        const hoursDiff = Math.round(milDiff / msInHour);
         if (swipeCounter >= numOfSwipesTillBlock && hoursDiff <= 12) {
           setSwipeBlock(true);
         } else {
