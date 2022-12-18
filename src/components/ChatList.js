@@ -10,13 +10,12 @@ const ChatList = () => {
     const navigation = useNavigation();
     const { currentUser } = firebase.auth();
     const userId = currentUser.uid;
-    console.log(userId);
     useEffect(
         () =>
          firestore().collection("matches").where('userMatched','array-contains',userId).onSnapshot(
             (snapshot)=>setMatches(
                 snapshot.docs.map((doc)=>({
-                    id:doc.id,
+                    docId:doc.id,
                     ...doc.data(),
                 }))
             )
@@ -28,6 +27,7 @@ const ChatList = () => {
         matches.length > 0 ?(
             <FlatList 
             data={matches}
+            
             keyExtractor = {item=> item.id}
             renderItem = {({item}) => <ChatRow matchDetails = {item}/>}
             />
