@@ -2,8 +2,11 @@ import { View, Text, Button, TextInput, StyleSheet } from 'react-native';
 import {useState, React} from 'react';
 import Logo from '../components/Logo';
 import { SelectList } from 'react-native-dropdown-select-list';
+import { firebase } from "@react-native-firebase/auth";
+import firestore from "@react-native-firebase/firestore";
 
 const PremiumCreationScreen = ({navigation}) => {
+    const { currentUser } = firebase.auth();
     const [creditCard, setCreditCard] = useState('');
     const [month, setMonth] = useState('');
     const [year, setYear] = useState('');
@@ -41,8 +44,15 @@ const PremiumCreationScreen = ({navigation}) => {
         navigation.navigate('Home1');
     }
     
-    function pay() {
-        // set isPremium as true!
+    const pay  = async () =>{        
+        await firestore()
+        .collection("users")
+        .doc(`${currentUser.uid}`)
+        .update({
+          id: `${currentUser.uid}`,
+          isPremium: true,
+        });
+        alert("Welcome to the premium club, enjoy!)");
         navigation.navigate('Home1');
     }
 

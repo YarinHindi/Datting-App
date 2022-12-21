@@ -11,6 +11,8 @@ import SetUserData from "../screens/SetUserData";
 import HomeBarNavigation from "./HomeBarNavigation";
 import MessageScreen from "../screens/MessageScreen";
 import UpdateUserData from "../screens/UpdateUserData";
+import PremiumCreationScreen from "../screens/PremiumCreationScreen";
+import LikesScreen from "../screens/LikesScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -62,6 +64,16 @@ function MainContainer() {
           name="Messages1"
           options={{ headerShown: false }}
           component={MessageScreen}
+        />
+        <Stack.Screen
+          name="PremiumCreation1"
+          options={{ headerShown: false }}
+          component={PremiumCreationScreen}
+        />
+        <Stack.Screen
+          name="Likes1"
+          options={{ headerShown: false }}
+          component={LikesScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>

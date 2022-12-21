@@ -10,30 +10,29 @@ const ChatList = () => {
     const navigation = useNavigation();
     const { currentUser } = firebase.auth();
     const userId = currentUser.uid;
-    console.log(userId);
     useEffect(
         () =>
          firestore().collection("matches").where('userMatched','array-contains',userId).onSnapshot(
             (snapshot)=>setMatches(
                 snapshot.docs.map((doc)=>({
-                    id:doc.id,
+                    docId:doc.id,
                     ...doc.data(),
                 }))
             )
         ),[userId]
     );
 
-      console.log(matches);
     return (
         matches.length > 0 ?(
             <FlatList 
             data={matches}
+            
             keyExtractor = {item=> item.id}
             renderItem = {({item}) => <ChatRow matchDetails = {item}/>}
             />
         ) :(
         <View style ={{padding :5,flexDirection:'column',alignItems:'center'}}>
-            <Text  style ={{textAlign:'center',fontSize:18,lineHeight: 28 }}> No mathes at the moment</Text>
+            <Text  style ={{textAlign:'center',fontSize:18,lineHeight: 28 }}> No matches at the moment</Text>
             <Image
              style = {{width:100, height:100,margin:'40%' }}
              source = {{uri:'https://cdn-icons-png.flaticon.com/128/1791/1791330.png'}}
