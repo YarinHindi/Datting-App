@@ -5,7 +5,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { firebase } from "@react-native-firebase/auth";
 ;
 const LikesList = () => {
-    const [users,setUsers] = useState([]);
+    const [users, setUsers] = useState([]);
     const [isPremium, setIsPremium] = useState("");
     const navigation = useNavigation();
     const { currentUser } = firebase.auth();
@@ -31,7 +31,7 @@ const LikesList = () => {
       useEffect(() => {
         const unsubscribe = firestore()
           .collection('users')
-          .onSnapshot((snap) =>
+          .onSnapshot((snap) => {
             snap.forEach((documentSnapshot) => {
               firestore()
                 .collection('users')
@@ -42,16 +42,34 @@ const LikesList = () => {
                 .then((s) => {
                   if (s.size > 0) {
                     console.log('entered!')
-                    setUsers((prev) => [...prev, { key:documentSnapshot.data().id, name: documentSnapshot.data().name, bio: documentSnapshot.data().bio, photoURL: documentSnapshot.data().photoURL }])
+                    const user = {
+                      key: documentSnapshot.data().id,
+                      name: documentSnapshot.data().name,
+                      bio: documentSnapshot.data().bio,
+                      photoURL: documentSnapshot.data().photoURL,
+                    }
+      
+                    // Check if user is already in the array
+                    const userExists = users.find(
+                        (u) => u.key === user.key
+                    )
+  
+                    // Only add the user if they are not already in the array
+                    if (!userExists) {
+                        setUsers((prev) => [...prev, user])
+                    }
                   }
                 })
-            })
+            })}
           )
+      
         return () => {
-            unsubscribe();
+          unsubscribe();
         }
-    }, [])
-            
+      }, [])
+        
+      const updatedUsers = users.filter((user, index, self) => self.findIndex((u) => u.key === user.key) === index)
+      console.log(updatedUsers.length)  
     
       if (!isPremium) {
         return (
@@ -64,10 +82,10 @@ const LikesList = () => {
       }
       else { 
           return (
-            users.length > 0 ? (
+            updatedUsers.length > 0 ? (
             <View style={styles.container}>
                 <FlatList 
-                data={users}
+                data={updatedUsers}
                 
                 renderItem = {({item}) => (
                     <View style={styles.item}>
