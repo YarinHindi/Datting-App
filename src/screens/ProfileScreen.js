@@ -17,7 +17,6 @@ const ProfileScreen = ({ navigation }) => {
   const [bio, setBio] = useState("");
   const [lookingFor, setLookingFor] = useState("");
   const [image, setImage] = useState(currentUser.photoURL);
-  let i = 0;
 
   const edit = () => {
     navigation.navigate("Data2");
