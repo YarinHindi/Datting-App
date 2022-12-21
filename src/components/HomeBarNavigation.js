@@ -29,7 +29,7 @@ const HomeBarNavigation = () => {
               ? "chatbubble-ellipses"
               : "chatbubble-ellipses-outline";
           } else if(rn == likesName) {
-            iconName = focused ? "home" : "home-outline";
+            iconName = focused ? "heart" : "heart-outline";
           } else if (rn == profileName) {
             iconName = focused ? "person-circle" : "person-circle-outline";
           }
