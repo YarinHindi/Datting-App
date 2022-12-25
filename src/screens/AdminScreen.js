@@ -27,7 +27,6 @@ const AdminScreen = () => {
       <Header {...props}  />
       <FlatList
            data={users}
-          ma
            keyExtractor = {item=> item.id}
            renderItem = {({item}) => <UsersRowDisplay UserDetails = {item}/>}
       

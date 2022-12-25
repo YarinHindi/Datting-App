@@ -44,7 +44,6 @@ const HomeScreen = ({navigation}) => {
             if(testLikesBefore.length>0)testLikes = testLikesBefore[0];
             let swipes = [...testLikes,...testUnLikes];
             let filteredArr = testUsers.filter(u => !swipes.find(un => u.id == un));
-            console.log(filteredArr);
             setUsers(filteredArr)
            })
      }
@@ -60,6 +59,7 @@ const HomeScreen = ({navigation}) => {
     console.log((await userRef.get()).size);
    
     if( (await  userRef.get()).size >0){
+
       userRef.doc(userId).update("likes",firebase.firestore.FieldValue.arrayUnion(users[currentCard].id));
       userRef.doc(userId).update("lastSwipeTime",firebase.firestore.Timestamp.now().toMillis());
     }else{
@@ -71,6 +71,7 @@ const HomeScreen = ({navigation}) => {
     if((await otherUserRef.get()).size>0){
       if ((await otherUserRef.where('likes','array-contains',userId).get()).size>0){
         firestore().collection('matches').add({userMatched:[userId,users[currentCard].id]});
+          
       }
     }
   
@@ -114,7 +115,7 @@ const unLike = async ()=>{
       setswipeCounter((prev)=>prev+1);
       setLastSwipeTime(timeStamp.getTime());
       
-
+    
     }
       
 }
@@ -158,6 +159,7 @@ useEffect(() => {
       snap.forEach(
         (documentSnapshot) => {
           setswipeCounter(documentSnapshot.data().swipeCounter);
+          
         }
       )
     );
@@ -167,11 +169,11 @@ useEffect(() => {
 useEffect(
   ()=>{
     let timeInMil = timeStamp.getTime();
-    
+  
     firestore().collection('users').doc(userId).collection('MySwipes').doc(userId).get().then((doc)=>{
-      let lastSwipe =doc.data().lastSwipeTime;
-      const milDiff = Math.abs(timeInMil-lastSwipe);
-      const msInHour = 1000*60*60;;
+      let lastSwipe =doc.data().lastSwipeTime;  
+      const milDiff = Math.abs(timeInMil-lastSwipe);  
+      const msInHour = 1000*60*60;
       const hoursDiff = Math.round(milDiff/msInHour)
       if(swipeCounter>=numOfSwipesTillBlock && hoursDiff<=12){
         setSwipeBlock(true)

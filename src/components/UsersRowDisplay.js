@@ -10,8 +10,8 @@ const UsersRowDisplay = ({UserDetails}) => {
     return (
 
        
-    <View style = {{flex : 1,paddingBottom:3}}>
-        <View style = {{flex:0.5,backgroundColor:'#D3D3D3',borderRadius:10}}>
+    <View style = {{flex : 1,paddingBottom:10}}>
+        <View style = {{flex:0.5,backgroundColor:'#d0c7b7',borderRadius:10}}>
             <View style={{flexDirection:'row',justifyContent:'space-between'}}>
             <Text style ={{fontSize:20}}>Name: {UserDetails.name}</Text>
                 <TouchableOpacity onPress={()=>setShowMOdal(true)}>
@@ -32,11 +32,14 @@ const UsersRowDisplay = ({UserDetails}) => {
                 <FlatList
                 data={reports}
                 keyExtractor =  {item=> reports.indexOf(item)}
-                renderItem = {({item}) => <Text style = {{fontSize:90,fontWeight:'800'}}> {item}</Text>}
+                renderItem = {({item}) => <Text style = {{fontSize:16,fontWeight:'800'}}> {item}</Text>}
                 />
-                <View style={{alignItems:'center',justifyContent:'center'}}>
+                <View style={{alignItems:'center',justifyContent:'center',marginBottom:4}}>
                 <Pressable style ={[styles.button,{marginBottom:7}]} onPress={deleteAcount} >
                     <Text style={styles.text}> Delete Acount </Text>
+                </Pressable>
+                <Pressable style ={[styles.button,{marginBottom:7}]} onPress={()=>setShowMOdal(false)}>
+                    <Text style={styles.text}>Warning</Text>
                 </Pressable>
                 <Pressable style ={[styles.button,{marginBottom:7}]} onPress={()=>setShowMOdal(false)}>
                     <Text style={styles.text}>Exit</Text>
@@ -51,7 +54,7 @@ const UsersRowDisplay = ({UserDetails}) => {
             </View>
       <Text style={[styles.User,{marginBottom:10}]}>Gender : {UserDetails.gender}   </Text>
       <Text style={[styles.User,{marginBottom:10}]}>isPremium : {UserDetails.isPremium} </Text>
-      <Text style = {[styles.User,]} >GotReported : {UserDetails.swipeCounter}</Text>
+      <Text style = {[styles.User,{paddingBottom:4}]} >GotReported : {UserDetails.swipeCounter}</Text>
       </View>
     </View>
   )
@@ -66,7 +69,7 @@ const styles = StyleSheet.create({
           justifyContent: 'center',
           paddingVertical: 12,
           paddingHorizontal: 32,
-          borderRadius: 4,
+          borderRadius: 100,
           elevation: 3,
           backgroundColor: 'black',
         },

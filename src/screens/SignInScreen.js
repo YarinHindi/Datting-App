@@ -38,7 +38,7 @@ const SignInScreen = ({ navigation }) => {
     if (user) {
       // if(checkIfAdmin)navigation.navigate("Home1");
       // else
-       navigation.navigate("Admin1");
+       navigation.navigate("Home1");
     }
   }
 
