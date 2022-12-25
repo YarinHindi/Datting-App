@@ -34,7 +34,7 @@ const SignUpScreen = ({ navigation }) => {
     if (initializing) return null;
 
     if (user) {
-      navigation.navigate("Data1");
+      navigation.navigate("Set User Data");
     }
   }
 

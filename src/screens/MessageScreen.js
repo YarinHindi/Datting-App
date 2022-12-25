@@ -13,6 +13,7 @@ import {
   ImageBackground,
   Pressable,
   LogBox,
+  Image,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useRoute } from "@react-navigation/native";
@@ -127,6 +128,20 @@ const MessageScreen = () => {
 
         <Modal style={styles.modal} isVisible={isModalVisible}>
           <View style={{ flex: 1 }}>
+            <Pressable onPress={handleModal}>
+              <Image
+                style={{
+                  height: 40,
+                  width: 40,
+                  borderColor: "red",
+                  left: 10,
+                  top: 10,
+                }}
+                source={{
+                  uri: "https://cdn-icons-png.flaticon.com/128/1828/1828665.png",
+                }}
+              />
+            </Pressable>
             <Text style={styles.text}>You are about to report: "{name}"</Text>
             <Text style={styles.text}>Please choose a reason:</Text>
             <Picker
