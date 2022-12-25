@@ -139,10 +139,14 @@ const HomeScreen = ({ navigation }) => {
     }
   };
 
-  const SwipeRight = () => {
+  const SwipeRight = async() => {
     if (users.length > 0) {
       addLikeAndcheckMatch();
       setswipeCounter((prev) => prev + 1);
+      const inc = firebase.firestore.FieldValue.increment(1);
+      await firestore().collection("users").doc(userId).update({
+        swipeCounter: inc,
+      });
     }
 
     nextCard();
@@ -155,10 +159,6 @@ const HomeScreen = ({ navigation }) => {
   };
   const nextCard = async () => {
     if (users.length > currentCard) {
-      const inc = firebase.firestore.FieldValue.increment(1);
-      await firestore().collection("users").doc(userId).update({
-        swipeCounter: inc,
-      });
       setCurrentCard((prev) => prev + 1);
       setLastSwipeTime(timeStamp.getTime());
     }
@@ -199,7 +199,6 @@ const HomeScreen = ({ navigation }) => {
           setIsPremium(documentSnapshot.data().isPremium);
           setswipeCounter(documentSnapshot.data().swipeCounter);
           setLookingFor(documentSnapshot.data().lookingFor)
-
         })
       );
   }, []);
