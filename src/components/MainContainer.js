@@ -46,12 +46,12 @@ function MainContainer() {
           component={ProfileScreen}
         />
         <Stack.Screen
-          name="Data1"
+          name="Set User Data"
           coptions={{ headerShown: false }}
           component={SetUserData}
         />
         <Stack.Screen
-          name="Data2"
+          name="Update User Data"
           coptions={{ headerShown: false }}
           component={UpdateUserData}
         />

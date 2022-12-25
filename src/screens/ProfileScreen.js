@@ -22,7 +22,7 @@ const ProfileScreen = ({ navigation }) => {
   const [image, setImage] = useState(currentUser.photoURL);
 
   const edit = () => {
-    navigation.navigate("Data2");
+    navigation.navigate("Update User Data");
   };
 
   const logout = () => {

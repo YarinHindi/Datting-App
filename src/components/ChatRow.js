@@ -47,7 +47,7 @@ const ChatRow = ({ matchDetails }) => {
             }))
           )
         ),
-    [currentUser]
+    [otherUser]
   );
   const makeUrlName = async () => {
     const photoURL = await matchedUserInfo[0].photoURL;

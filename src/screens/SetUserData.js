@@ -38,32 +38,32 @@ const SetUserData = ({ navigation }) => {
   };
 
   const save = async () => {
-    uploadImageToStorage(image, `${currentUser.uid}`);
+    if (name && bio && image) {
+      uploadImageToStorage(image, `${currentUser.uid}`);
 
-    const ref = firebase.storage().ref(`${currentUser.uid}`);
-    const url = await ref.getDownloadURL();
+      const ref = firebase.storage().ref(`${currentUser.uid}`);
+      const url = await ref.getDownloadURL();
 
-    try {
-      await firestore()
-        .collection("users")
-        .doc(`${currentUser.uid}`)
-        .set({
-          id: `${currentUser.uid}`,
-          name: `${name ? name : console.warn("no name")}`,
-          bio: `${bio ? bio : console.warn("no bio")}`,
-          swipeCounter: 0,
-          lookingFor: `${
-            lookingFor ? lookingFor : console.warn("no looking for")
-          }`,
-          gender: `${gender ? gender : console.warn("no gender")}`,
-          isPremium: false,
-          photoURL: `${url}`,
-        });
-    } catch (e) {
-      console.error("Error adding document: ", e);
+      try {
+        await firestore()
+          .collection("users")
+          .doc(`${currentUser.uid}`)
+          .set({
+            id: `${currentUser.uid}`,
+            name: `${name}`,
+            bio: `${bio}`,
+            swipeCounter: 0,
+            lookingFor: `${lookingFor}`,
+            gender: `${gender}`,
+            isPremium: false,
+            photoURL: `${url}`,
+          });
+      } catch (e) {
+        console.error("Error adding document: ", e);
+      }
+      alert("We got your data successfully :)");
+      navigation.navigate("Home1");
     }
-    alert("We got your data successfully :)");
-    navigation.navigate("Home1");
   };
 
   const uploadImage = () => {
