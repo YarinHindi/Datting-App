@@ -5,10 +5,13 @@ import {
   SafeAreaView,
   Image,
   Pressable,
+  LogBox,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import auth, { firebase } from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
+
+LogBox.ignoreAllLogs();
 
 const ProfileScreen = ({ navigation }) => {
   const { currentUser } = firebase.auth();

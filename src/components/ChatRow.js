@@ -9,7 +9,7 @@ const ChatRow = ({ matchDetails }) => {
   const [URL, setURL] = useState("");
   const [name, setName] = useState("");
   const [docId, setdocId] = useState("");
-  const [lastMessage,setLastMessage] = useState("Say Hi!");
+  const [lastMessage, setLastMessage] = useState("Say Hi!");
   const navigation = useNavigation();
   const { currentUser } = firebase.auth();
   let otherUser;
@@ -20,17 +20,20 @@ const ChatRow = ({ matchDetails }) => {
   }
 
   useEffect(
-    ()=>
-    firestore().collection('matches').doc(matchDetails.docId).collection('messages')
-    .orderBy("timestamp",'asc').onSnapshot(
-      (snapshot)=>
-        snapshot.forEach((snapdoc)=>{
-          setLastMessage(snapdoc.data().message);
-        })
-      )
-      
-    ,[]
-  )
+    () =>
+      firestore()
+        .collection("matches")
+        .doc(matchDetails.docId)
+        .collection("messages")
+        .orderBy("timestamp", "asc")
+        .onSnapshot((snapshot) =>
+          snapshot.forEach((snapdoc) => {
+            setLastMessage(snapdoc.data().message);
+          })
+        ),
+
+    []
+  );
 
   useEffect(
     () =>
@@ -40,8 +43,7 @@ const ChatRow = ({ matchDetails }) => {
         .onSnapshot((snapshot) =>
           setmatchedUserInfo(
             snapshot.docs.map((doc) => ({
-                ...doc.data(),
-
+              ...doc.data(),
             }))
           )
         ),
@@ -52,9 +54,7 @@ const ChatRow = ({ matchDetails }) => {
     const curName = await matchedUserInfo[0].name;
     setURL(photoURL);
     setName(curName);
-
   };
-
 
   makeUrlName();
   return (
@@ -72,7 +72,12 @@ const ChatRow = ({ matchDetails }) => {
       ]}
       onPress={() =>
         navigation.navigate("Messages1", {
-          matchDetails: {name:name, photo: URL,otherUserId: otherUser,docId:matchDetails.docId},
+          matchDetails: {
+            name: name,
+            photo: URL,
+            otherUserId: otherUser,
+            docId: matchDetails.docId,
+          },
         })
       }
     >

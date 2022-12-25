@@ -1,4 +1,3 @@
-import { View, Text } from "react-native";
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -28,8 +27,8 @@ const HomeBarNavigation = () => {
             iconName = focused
               ? "chatbubble-ellipses"
               : "chatbubble-ellipses-outline";
-          } else if(rn == likesName) {
-            iconName = focused ? "heart" : "heart-outline"
+          } else if (rn == likesName) {
+            iconName = focused ? "heart" : "heart-outline";
           } else if (rn == profileName) {
             iconName = focused ? "person-circle" : "person-circle-outline";
           }
@@ -43,20 +42,18 @@ const HomeBarNavigation = () => {
         labelStyle: { paddingBottom: 7, fontSize: 10 },
         style: { padding: 10, height: 70 },
 
-    
-          // "tabBarActiveTintColor": "tomato",
-          // "tabBarInactiveTintColor": "grey",
-          // "tabBarLabelStyle": {
-          //   "paddingBottom": 7,
-          //   "fontSize": 10
-          // },
-          // "tabBarStyle": [
-          //   {
-          //     "display": "flex"
-          //   },
-          //   null
-          // ]
-        
+        // "tabBarActiveTintColor": "tomato",
+        // "tabBarInactiveTintColor": "grey",
+        // "tabBarLabelStyle": {
+        //   "paddingBottom": 7,
+        //   "fontSize": 10
+        // },
+        // "tabBarStyle": [
+        //   {
+        //     "display": "flex"
+        //   },
+        //   null
+        // ]
       }}
     >
       <Tab.Screen

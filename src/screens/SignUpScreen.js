@@ -1,7 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, StyleSheet, Button } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  Button,
+  LogBox,
+} from "react-native";
 import auth from "@react-native-firebase/auth";
 import Logo from "../components/Logo";
+
+LogBox.ignoreAllLogs();
 
 const SignUpScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -48,7 +57,6 @@ const SignUpScreen = ({ navigation }) => {
   }
 
   function check() {
-    console.warn("asfas");
     navigation.navigate("SignIn1");
   }
 

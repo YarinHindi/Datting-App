@@ -1,17 +1,17 @@
-import {SafeAreaView ,View, Text,Image } from 'react-native'
-import React from 'react'
-import Logo from '../components/Logo'
-import ChatList from '../components/ChatList'
-import { useRoute } from '@react-navigation/native'
+import { SafeAreaView, LogBox } from "react-native";
+import React from "react";
+import Logo from "../components/Logo";
+import ChatList from "../components/ChatList";
 
-const ChatScreen = ({navigation}) => {
+LogBox.ignoreAllLogs();
 
+const ChatScreen = ({ navigation }) => {
   return (
-    <SafeAreaView style = {{flex: 1}}>
-      <Logo/>
-      <ChatList/>
+    <SafeAreaView style={{ flex: 1 }}>
+      <Logo />
+      <ChatList />
     </SafeAreaView>
-  )
-}
+  );
+};
 
-export default ChatScreen
+export default ChatScreen;

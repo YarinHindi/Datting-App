@@ -12,18 +12,19 @@ import {
   FlatList,
   ImageBackground,
   Pressable,
+  LogBox,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useRoute } from "@react-navigation/native";
 import Header from "../components/Header";
 import { firebase } from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
-import ProfileScreen from "./ProfileScreen";
-import { async } from "@firebase/util";
 import SenderMessage from "../components/SenderMessage";
 import ReceiverMessage from "../components/ReceiverMessage";
 import Modal from "react-native-modal";
 import { Picker } from "@react-native-picker/picker";
+
+LogBox.ignoreAllLogs();
 
 const MessageScreen = () => {
   const { name, photo, otherUserId, docId } = useRoute().params.matchDetails;

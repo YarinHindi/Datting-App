@@ -6,6 +6,7 @@ import {
   Pressable,
   TextInput,
   Image,
+  LogBox,
 } from "react-native";
 import React, { useState } from "react";
 import { Picker } from "@react-native-picker/picker";
@@ -13,6 +14,8 @@ import ImagePicker from "react-native-image-crop-picker";
 import { firebase } from "@react-native-firebase/auth";
 import firestore from "@react-native-firebase/firestore";
 import storage from "@react-native-firebase/storage";
+
+LogBox.ignoreAllLogs();
 
 const SetUserData = ({ navigation }) => {
   const { currentUser } = firebase.auth();
@@ -31,7 +34,7 @@ const SetUserData = ({ navigation }) => {
         // 4
         console.log("Image uploaded to the bucket!");
       })
-      .catch((e) => console.log("uploading image error => ", e));
+      .catch((e) => console.error("uploading image error => ", e));
   };
 
   const save = async () => {
