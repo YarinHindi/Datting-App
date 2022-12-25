@@ -22,10 +22,12 @@ const HomeScreen = ({ navigation }) => {
   const userId = currentUser.uid;
   const [currentCard, setCurrentCard] = useState(0);
   const [swipeBlock, setSwipeBlock] = useState(false);
-  const numOfSwipesTillBlock = 3;
+  const numOfSwipesTillBlock = 4;
   const [swipeCounter, setswipeCounter] = useState(0);
   const [lastSwipeTime, setLastSwipeTime] = useState(0);
   const [isPremium, setIsPremium] = useState("");
+  const [lookingFor, setLookingFor] = useState("");
+
   const timeStamp = new Date();
   useEffect(() => {
     firestore()
@@ -54,12 +56,11 @@ const HomeScreen = ({ navigation }) => {
             if (testLikesBefore.length > 0) testLikes = testLikesBefore[0];
             let swipes = [...testLikes, ...testUnLikes];
             let filteredArr = testUsers.filter(
-              (u) => !swipes.find((un) => u.id == un)
-            );
+              (u) => !swipes.find((un) => u.id == un) && u.gender==lookingFor );
             setUsers(filteredArr);
           });
       });
-  }, []);
+  }, [lookingFor]);
 
   const usersfilter = users.map(({ id, name, bio, photoURL }) => ({
     id,
@@ -141,7 +142,9 @@ const HomeScreen = ({ navigation }) => {
   const SwipeRight = () => {
     if (users.length > 0) {
       addLikeAndcheckMatch();
+      setswipeCounter((prev) => prev + 1);
     }
+
     nextCard();
   };
   const SwipeLeft = () => {
@@ -157,7 +160,6 @@ const HomeScreen = ({ navigation }) => {
         swipeCounter: inc,
       });
       setCurrentCard((prev) => prev + 1);
-      setswipeCounter((prev) => prev + 1);
       setLastSwipeTime(timeStamp.getTime());
     }
   };
@@ -196,6 +198,8 @@ const HomeScreen = ({ navigation }) => {
         snap.forEach((documentSnapshot) => {
           setIsPremium(documentSnapshot.data().isPremium);
           setswipeCounter(documentSnapshot.data().swipeCounter);
+          setLookingFor(documentSnapshot.data().lookingFor)
+
         })
       );
   }, []);
@@ -230,14 +234,11 @@ const HomeScreen = ({ navigation }) => {
         }
       });
   });
-
   let props = fetchCard();
   return (
     <View style={{ flex: 1 }}>
       <View>
         <Logo />
-        {/* if user is not premium */}
-        {/* <Button title='Go premium' onPress={goPremium}/> */}
         <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
           <TouchableOpacity disabled={btn} onPress={() => SwipeLeft()}>
             <Image
