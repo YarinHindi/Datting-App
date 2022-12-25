@@ -22,7 +22,7 @@ const HomeScreen = ({ navigation }) => {
   const userId = currentUser.uid;
   const [currentCard, setCurrentCard] = useState(0);
   const [swipeBlock, setSwipeBlock] = useState(false);
-  const numOfSwipesTillBlock = 3;
+  const numOfSwipesTillBlock = 10;
   const [swipeCounter, setswipeCounter] = useState(0);
   const [lastSwipeTime, setLastSwipeTime] = useState(0);
   const [isPremium, setIsPremium] = useState("");
