@@ -11,13 +11,15 @@ const admin= require('firebase-admin')
 
 
 
+const serviceAccount = require("C:\Users\yarin\Downloads\datingapp-3423b-firebase-adminsdk-ok7h7-f21f29b81e.json")
 
 
 
 
-initializeApp({
-  credential: admin.credential.cert("./datingapp-3423b-firebase-adminsdk-ok7h7-f21f29b81e.json")
 
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: 'https://datingapp-3423b.firebaseio.com'
 });
 
 
