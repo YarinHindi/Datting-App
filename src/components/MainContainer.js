@@ -13,6 +13,7 @@ import MessageScreen from "../screens/MessageScreen";
 import UpdateUserData from "../screens/UpdateUserData";
 import PremiumCreationScreen from "../screens/PremiumCreationScreen";
 import LikesScreen from "../screens/LikesScreen";
+import AdminScreen from "../screens/AdminScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -74,6 +75,11 @@ function MainContainer() {
           name="Likes1"
           options={{ headerShown: false }}
           component={LikesScreen}
+        />
+        <Stack.Screen
+          name="Admin1"
+          options={{ headerShown: false }}
+          component={AdminScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>
