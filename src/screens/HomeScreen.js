@@ -4,6 +4,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   LogBox,
+  SliderComponent,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import Logo from "../components/Logo";
@@ -27,15 +28,30 @@ const HomeScreen = ({ navigation }) => {
   const [lastSwipeTime, setLastSwipeTime] = useState(0);
   const [isPremium, setIsPremium] = useState("");
   const [lookingFor, setLookingFor] = useState("");
-
+  const [users1, setUsers1] = useState([]);
   const timeStamp = new Date();
+
+
   useEffect(() => {
-    firestore()
-      .collection("users")
-      .where("id", "!=", userId)
-      .get()
-      .then((snap) => {
-        let testUsers = snap.docs.map((doc) => doc.data());
+    const getServerFunc = async () => {
+      try {
+        const res = await fetch("http://192.168.56.1:1000/getUsers", { method: "GET" });
+        const users2 = await res.json();
+        setUsers1(users2.users);
+        // return users2.users;
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    getServerFunc();
+  }, [])
+  
+  // console.log("here it is\n", users1, users1.length);
+  useEffect(() =>  {
+    // let users1 = getServerFunc();
+    
+    let testUsers = users1.filter((u) => u.id != userId);
+    console.log("updated len: ", testUsers.length);
         firestore()
           .collection("users")
           .doc(userId)
@@ -59,8 +75,7 @@ const HomeScreen = ({ navigation }) => {
               (u) => !swipes.find((un) => u.id == un) && u.gender==lookingFor );
             setUsers(filteredArr);
           });
-      });
-  }, [lookingFor]);
+  }, [lookingFor, users1]);
 
   const usersfilter = users.map(({ id, name, bio, photoURL }) => ({
     id,
