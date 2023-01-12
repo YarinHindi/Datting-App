@@ -7,7 +7,8 @@ import {
   Button,
   LogBox,
 } from "react-native";
-import auth from "@react-native-firebase/auth";
+import auth, { firebase} from "@react-native-firebase/auth";
+import firestore from "@react-native-firebase/firestore";
 import Logo from "../components/Logo";
 
 LogBox.ignoreAllLogs();
@@ -20,6 +21,7 @@ const SignInScreen = ({ navigation }) => {
     // Set an initializing state whilst Firebase connects
     const [initializing, setInitializing] = useState(true);
     const [user, setUser] = useState();
+    let admin_id = 'I8TYZWC2bgWVuosPDUOuIT0QF7A2';
 
     // Handle user state changes
     function onAuthStateChanged(user) {
@@ -35,7 +37,15 @@ const SignInScreen = ({ navigation }) => {
     if (initializing) return null;
 
     if (user) {
-      navigation.navigate("Home1");
+      const { currentUser } = firebase.auth();
+      const userId = currentUser.uid;
+
+      if (userId == admin_id) {
+        navigation.navigate("Admin1");
+      }
+      else {
+        navigation.navigate("Home1");
+      }  
     }
   }
 
