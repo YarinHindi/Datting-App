@@ -11,11 +11,19 @@ const AdminScreen = ({navigation}) => {
 
   useEffect(
     ()=> {
-    firestore().collection('users').onSnapshot((snap)=>{
-      let temp_users = snap.docs.map((doc)=>  doc.data());
+    firestore().collection('users').onSnapshot( async (snap)=>{
+      let bans = [];
+       let temp_users = [] 
+     await firestore().collection('Bans').get().then((doc)=>{
+          bans = doc.docs.map((d)=>d.data().id)
+          snap.forEach((doc2)=>{
+            if(!bans.includes(doc2.data().id)){
+                temp_users.push(doc2.data());
+            }
+            })
+        }) 
       let temp_users1 = temp_users.filter((u) => u.id != 'I8TYZWC2bgWVuosPDUOuIT0QF7A2');
       setUsers(temp_users1);
-      
       // setUsers(users.filter((u) => u.id != 'I8TYZWC2bgWVuosPDUOuIT0QF7A2'));
     })
   } ,[])

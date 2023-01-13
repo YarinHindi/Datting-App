@@ -7,6 +7,7 @@ const UsersRowDisplay = ({UserDetails}) => {
     const reports = ['GotReportedby: miriam , casue: sent Nudes', 'GotReportedby: simha , casue: talk dirty']
     const deleteAcount = async () =>{
         console.log(UserDetails.id);
+        firestore().collection('Bans').add({id: UserDetails.id});
         try {
             const res = await fetch('http://192.168.56.1:1000/deleteUser', { method: "POST", 
             headers: {

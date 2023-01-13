@@ -49,32 +49,46 @@ const HomeScreen = ({ navigation }) => {
   // console.log("here it is\n", users1, users1.length);
   useEffect(() =>  {
     // let users1 = getServerFunc();
-    
     let testUsers = users1.filter((u) => u.id != userId);
-    console.log("updated len: ", testUsers.length);
-        firestore()
-          .collection("users")
-          .doc(userId)
-          .collection("MySwipes")
-          .get()
-          .then((swipe) => {
-            let swipeTime = swipe.docs.map((doc) => doc.data().lastSwipeTime);
+    console.log("users from server: ", testUsers);
+    let bans = [];
+    let temp_users = [];
+    firestore().collection('Bans').get().then((doc)=>{
+        bans = doc.docs.map((d)=>d.data().id);
+        console.log("bans : ", bans);
+        testUsers.forEach((doc2)=>{
+          console.log("im here! :");
+          if(!bans.includes(doc2.id)){
+            console.log("inside if");  
+            temp_users.push(doc2);
+          }
+          console.log("temp users :");
+      })
+      
+      firestore()
+        .collection("users")
+        .doc(userId)
+        .collection("MySwipes")
+        .get()
+        .then((swipe) => {
+          let swipeTime = swipe.docs.map((doc) => doc.data().lastSwipeTime);
 
-            if (swipeTime.length > 0) setLastSwipeTime(swipeTime[0]);
-            let testUnLikes = [];
-            let testLikes = [];
-            let testUnlikesBefore = swipe.docs.map((doc) => doc.data().unlikes);
+          if (swipeTime.length > 0) setLastSwipeTime(swipeTime[0]);
+          let testUnLikes = [];
+          let testLikes = [];
+          let testUnlikesBefore = swipe.docs.map((doc) => doc.data().unlikes);
 
-            if (testUnlikesBefore.length > 0)
-              testUnLikes = testUnlikesBefore[0];
+          if (testUnlikesBefore.length > 0)
+            testUnLikes = testUnlikesBefore[0];
 
-            let testLikesBefore = swipe.docs.map((doc) => doc.data().likes);
-            if (testLikesBefore.length > 0) testLikes = testLikesBefore[0];
-            let swipes = [...testLikes, ...testUnLikes];
-            let filteredArr = testUsers.filter(
-              (u) => !swipes.find((un) => u.id == un) && u.gender==lookingFor );
-            setUsers(filteredArr);
-          });
+          let testLikesBefore = swipe.docs.map((doc) => doc.data().likes);
+          if (testLikesBefore.length > 0) testLikes = testLikesBefore[0];
+          let swipes = [...testLikes, ...testUnLikes];
+          let filteredArr = temp_users.filter(
+            (u) => !swipes.find((un) => u.id == un) && u.gender==lookingFor );
+          setUsers(filteredArr);
+        });
+    })
   }, [lookingFor, users1]);
 
   const usersfilter = users.map(({ id, name, bio, photoURL }) => ({
